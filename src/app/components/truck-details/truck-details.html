@@ -1,0 +1,214 @@
+<div class="truck-details-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading truck details...</p>
+  </div>
+
+  <!-- Edit Mode -->
+  <div *ngIf="!loading && truck && isEditing" class="edit-mode">
+    <app-truck-form
+      [truck]="truck"
+      [isEdit]="true"
+      (save)="saveTruck($event)"
+      (cancel)="cancelEdit()">
+    </app-truck-form>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loading && truck && !isEditing" class="truck-content">
+    <!-- Truck Information Card -->
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-card-title>
+          Vehicle Information - {{ truck.model }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-grid">
+          <div class="info-item" *ngIf="truck.unitNumber">
+            <div class="icon-container">
+              <mat-icon>confirmation_number</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Unit Number</span>
+              <span class="info-value">{{ truck.unitNumber }}</span>
+              <span class="info-description">Fleet unit identifier</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="icon-container">
+              <mat-icon>badge</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">VIN Number</span>
+              <span class="info-value">{{ truck.vin }}</span>
+              <span class="info-description">Vehicle identification number</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="icon-container">
+              <mat-icon>settings</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Engine Number</span>
+              <span class="info-value">{{ truck.engineNumber }}</span>
+              <span class="info-description">Engine identification</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="icon-container">
+              <mat-icon>speed</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Odometer Reading</span>
+              <span class="info-value">{{ truck.odometerReading | number:'1.0-0' }} km</span>
+              <span class="info-description">Total kilometers driven</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="icon-container">
+              <mat-icon>schedule</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Engine Hours</span>
+              <span class="info-value">{{ truck.engineHours | number:'1.0-0' }} hrs</span>
+              <span class="info-description">Total engine runtime</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="icon-container">
+              <mat-icon>warning</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Active Issues</span>
+              <span class="info-value">{{ truck.failures.length }}</span>
+              <span class="info-description">{{ truck.failures.length === 0 ? 'No issues reported' : truck.failures.length === 1 ? 'Issue requiring attention' : 'Issues requiring attention' }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Failures Section -->
+    <mat-card class="failures-card">
+      <mat-card-header>
+        <mat-card-title>
+          Failure Reports ({{ truck.failures.length }})
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="truck.failures.length === 0" class="no-failures">
+          <mat-icon class="large-icon">check_circle</mat-icon>
+          <h3>No Failures Reported</h3>
+          <p>This truck has no recorded failures.</p>
+        </div>
+
+        <mat-accordion *ngIf="truck.failures.length > 0">
+          <mat-expansion-panel *ngFor="let failure of truck.failures; let i = index" class="failure-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon class="failure-icon">error_outline</mat-icon>
+                {{ failure.title }}
+              </mat-panel-title>
+              <mat-panel-description>
+                <mat-chip-set>
+                  <mat-chip *ngIf="failure.videoContent && failure.videoContent.length > 0" class="video-chip">
+                    <mat-icon>video_library</mat-icon>
+                    {{ failure.videoContent.length }} Videos
+                  </mat-chip>
+                </mat-chip-set>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div class="failure-content">
+              <!-- Description -->
+              <div class="description-section">
+                <h4>
+                  <mat-icon>description</mat-icon>
+                  Description
+                </h4>
+                <p>{{ failure.description }}</p>
+              </div>
+
+              <!-- Video Content Section -->
+              <div class="video-section">
+                <div class="section-header">
+                  <h4>
+                    <mat-icon>video_library</mat-icon>
+                    Videos & Documentation
+                  </h4>
+                </div>
+
+                <!-- Existing Videos Display -->
+                <div *ngIf="failure.videoContent && failure.videoContent.length > 0" class="video-gallery">
+                  <h5>Current Videos</h5>
+                  <div class="video-grid">
+                    <mat-card *ngFor="let video of failure.videoContent" class="video-card" (click)="playVideo(video)">
+                      <div class="video-thumbnail">
+                        <img *ngIf="video.thumbnail" [src]="video.thumbnail" [alt]="video.fileName || 'Video thumbnail'">
+                        <div class="video-overlay">
+                          <mat-icon class="play-icon">play_arrow</mat-icon>
+                        </div>
+                        <div class="video-type-badge uploaded">
+                          <mat-icon>videocam</mat-icon>
+                        </div>
+                      </div>
+                      <mat-card-content class="video-info">
+                        <h6>{{ video.fileName }}</h6>
+                        <div class="video-metadata">
+                          <span class="metadata-item">
+                            <mat-icon>storage</mat-icon>
+                            {{ (video.fileSize / 1024 / 1024) | number:'1.1-1' }}MB
+                          </span>
+                          <span *ngIf="video.duration" class="metadata-item">
+                            <mat-icon>schedule</mat-icon>
+                            {{ video.duration | number:'1.0-0' }}s
+                          </span>
+                        </div>
+                      </mat-card-content>
+                    </mat-card>
+                  </div>
+                </div>
+
+                <div *ngIf="!failure.videoContent || failure.videoContent.length === 0" 
+                     class="no-videos">
+                  <mat-icon>video_library</mat-icon>
+                  <p>No videos available for this failure</p>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Video Player Modal -->
+  <div *ngIf="showVideoPlayer" class="video-player-overlay" (click)="closeVideoPlayer()">
+    <div class="video-player-modal" (click)="$event.stopPropagation()">
+      <div class="video-player-header">
+        <h3>{{ currentVideo?.fileName || 'Video Player' }}</h3>
+        <button (click)="closeVideoPlayer()" class="close-video-btn">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="video-player-content">
+        <video *ngIf="currentVideo" controls autoplay>
+          <source [src]="currentVideo.url" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!loading && !truck" class="error-container">
+    <mat-icon class="error-icon">error</mat-icon>
+    <h2>Truck Not Found</h2>
+    <p>The requested truck could not be found.</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      Return to Truck List
+    </button>
+  </div>
+</div>

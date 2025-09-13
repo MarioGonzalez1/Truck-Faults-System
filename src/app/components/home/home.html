@@ -1,0 +1,115 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Fleet Scorecard</h1>
+    <p>Monitor fleet performance and maintenance status</p>
+  </div>
+  
+  <div class="dashboard-content">
+    <!-- Key Metrics -->
+    <div class="metrics-section">
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-truck"></i>
+        </div>
+        <div class="metric-content">
+          <div class="metric-value">{{ totalTrucks }}</div>
+          <div class="metric-label">Fleet Size</div>
+        </div>
+      </div>
+      
+      <div class="metric-card alert">
+        <div class="metric-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="metric-content">
+          <div class="metric-value">{{ totalFailures }}</div>
+          <div class="metric-label">Total Issues</div>
+        </div>
+      </div>
+      
+      <div class="metric-card warning">
+        <div class="metric-icon">
+          <i class="fas fa-tools"></i>
+        </div>
+        <div class="metric-content">
+          <div class="metric-value">{{ avgFailuresPerTruck }}</div>
+          <div class="metric-label">Avg Issues/Unit</div>
+        </div>
+      </div>
+      
+      <div class="metric-card critical">
+        <div class="metric-icon">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <div class="metric-content">
+          <div class="metric-value">{{ criticalFailures }}</div>
+          <div class="metric-label">Critical Issues</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Failure Analysis -->
+    <div class="analysis-section">
+      <div class="section-header">
+        <i class="fas fa-chart-bar"></i>
+        <h3>Failure Analysis</h3>
+      </div>
+      
+      <div class="analysis-grid">
+        <div class="analysis-item" *ngFor="let category of failureCategories">
+          <div class="analysis-label">
+            <span class="category-name">{{ category.name }}</span>
+            <span class="category-count">{{ category.count }}</span>
+          </div>
+          <div class="analysis-bar">
+            <div class="bar-fill" [style.width.%]="category.percentage"></div>
+          </div>
+          <div class="analysis-percentage">{{ category.percentage }}%</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Fleet Status -->
+    <div class="status-section">
+      <div class="section-header">
+        <i class="fas fa-clipboard-list"></i>
+        <h3>Fleet Status</h3>
+      </div>
+      
+      <div class="status-grid">
+        <div class="status-card">
+          <div class="status-icon">
+            <i class="fas fa-tachometer-alt"></i>
+          </div>
+          <div class="status-info">
+            <div class="status-title">High Mileage</div>
+            <div class="status-value">{{ highMileageTrucks }} units</div>
+            <div class="status-desc">Over 200k km</div>
+          </div>
+        </div>
+        
+        <div class="status-card">
+          <div class="status-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="status-info">
+            <div class="status-title">Engine Hours</div>
+            <div class="status-value">{{ highEngineHours }} units</div>
+            <div class="status-desc">Over 5000h</div>
+          </div>
+        </div>
+        
+        <div class="status-card">
+          <div class="status-icon">
+            <i class="fas fa-wrench"></i>
+          </div>
+          <div class="status-info">
+            <div class="status-title">Maintenance Due</div>
+            <div class="status-value">{{ maintenanceDue }} units</div>
+            <div class="status-desc">Need attention</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

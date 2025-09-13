@@ -1,0 +1,103 @@
+<mat-card class="video-upload-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>video_library</mat-icon>
+      Video Management
+    </mat-card-title>
+    <mat-card-subtitle>Upload video files for documentation</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="upload-section">
+      <div class="upload-area" [class.uploading]="isUploading">
+        <input
+          #fileInput
+          type="file"
+          accept="video/mp4,video/webm,video/avi,video/mov,video/quicktime"
+          (change)="onFileSelected($event)"
+          hidden
+        >
+        
+        <div *ngIf="!isUploading" class="upload-prompt" (click)="triggerFileInput()">
+          <mat-icon class="upload-icon">cloud_upload</mat-icon>
+          <p>Click to select video file</p>
+          <p class="upload-info">Supported formats: MP4, WebM, AVI, MOV</p>
+          <p class="upload-info">Maximum size: 500MB</p>
+        </div>
+
+        <div *ngIf="isUploading" class="upload-progress">
+          <mat-icon class="upload-icon">backup</mat-icon>
+          <p>Uploading video...</p>
+          <mat-progress-bar mode="determinate" [value]="uploadProgress"></mat-progress-bar>
+          <p class="progress-text">{{uploadProgress}}%</p>
+        </div>
+      </div>
+
+      <div class="upload-actions">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="triggerFileInput()"
+          [disabled]="isUploading">
+          <mat-icon>add</mat-icon>
+          Select Video File
+        </button>
+      </div>
+    </div>
+
+    <!-- Existing Videos List -->
+    <div *ngIf="existingVideos.length > 0" class="existing-videos">
+      <h3>
+        <mat-icon>video_collection</mat-icon>
+        Current Videos ({{existingVideos.length}})
+      </h3>
+      
+      <div class="video-list">
+        <mat-card *ngFor="let video of existingVideos" class="video-item">
+          <div class="video-info">
+            <div class="video-thumbnail" *ngIf="video.thumbnail">
+              <img [src]="video.thumbnail" [alt]="getVideoDisplayName(video)">
+              <div class="video-type-badge uploaded">
+                <mat-icon>videocam</mat-icon>
+              </div>
+            </div>
+
+            <div class="video-details">
+              <h4>{{getVideoDisplayName(video)}}</h4>
+              <div class="video-metadata">
+                <span class="metadata-item">
+                  <mat-icon>storage</mat-icon>
+                  {{getVideoSize(video)}}
+                </span>
+                <span *ngIf="getVideoDuration(video)" class="metadata-item">
+                  <mat-icon>schedule</mat-icon>
+                  {{getVideoDuration(video)}}
+                </span>
+                <span *ngIf="video.uploadDate" class="metadata-item">
+                  <mat-icon>event</mat-icon>
+                  {{video.uploadDate | date:'short'}}
+                </span>
+              </div>
+            </div>
+
+            <div class="video-actions">
+              <button 
+                mat-icon-button 
+                color="warn" 
+                (click)="removeVideo(video)"
+                matTooltip="Remove video">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+    <div *ngIf="existingVideos.length === 0" class="no-videos">
+      <mat-icon class="large-icon">video_library</mat-icon>
+      <p>No videos added yet</p>
+      <p class="subtitle">Upload a video file to get started</p>
+    </div>
+  </mat-card-content>
+</mat-card>

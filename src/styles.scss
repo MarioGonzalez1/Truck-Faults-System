@@ -1,0 +1,707 @@
+/* ==============================================
+   GLOBAL DESIGN SYSTEM
+   Premium, Minimalist UI Design System
+   Inspired by Apple & Tesla Design Philosophy
+   ============================================== */
+
+/* Angular Material Base Styles - Loaded from CDN */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* CSS Variables for Design Tokens */
+:root {
+  /* Color Palette - Ultra Minimalist */
+  --color-white: #FFFFFF;
+  --color-gray-50: #FAFBFC;
+  --color-gray-100: #F7F8FA;
+  --color-gray-200: #EAEDF0;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+  --color-black: #000000;
+  
+  /* Primary Accent - Sophisticated Navy */
+  --color-primary: #1B365D;
+  --color-primary-hover: #142944;
+  --color-primary-light: #2C4A75;
+  --color-primary-subtle: #F0F4F8;
+  
+  /* Semantic Colors - Muted & Professional */
+  --color-success: #059669;
+  --color-success-light: #F0FDF4;
+  --color-warning: #D97706;
+  --color-warning-light: #FEF3C7;
+  --color-danger: #DC2626;
+  --color-danger-light: #FEE2E2;
+  
+  /* Diagnostic Severity Colors - Professional Standards */
+  --severity-critical: #DC2626;       /* Red - Critical/Stop */
+  --severity-critical-bg: #FEF2F2;
+  --severity-critical-border: #F87171;
+  
+  --severity-high: #EA580C;           /* Orange - High Priority */
+  --severity-high-bg: #FFF7ED;
+  --severity-high-border: #FB923C;
+  
+  --severity-medium: #D97706;         /* Amber - Medium Priority */
+  --severity-medium-bg: #FFFBEB;
+  --severity-medium-border: #FCD34D;
+  
+  --severity-low: #0284C7;            /* Blue - Low Priority/Info */
+  --severity-low-bg: #F0F9FF;
+  --severity-low-border: #38BDF8;
+  
+  --severity-info: #6B7280;           /* Gray - Informational */
+  --severity-info-bg: #F9FAFB;
+  --severity-info-border: #D1D5DB;
+  
+  /* Status Indicators */
+  --status-active: #10B981;           /* Green - Active/OK */
+  --status-inactive: #6B7280;         /* Gray - Inactive */
+  --status-pending: #F59E0B;          /* Yellow - Pending */
+  --status-error: #EF4444;            /* Red - Error */
+  
+  /* Typography - Clean System Fonts */
+  --font-family-primary: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Segoe UI', system-ui, sans-serif;
+  --font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* Spacing System - 8px Grid */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-2xl: 3rem;     /* 48px */
+  --spacing-3xl: 4rem;     /* 64px */
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;    /* 4px */
+  --radius-md: 0.5rem;     /* 8px */
+  --radius-lg: 0.75rem;    /* 12px */
+  --radius-xl: 1rem;       /* 16px */
+  --radius-full: 9999px;
+  
+  /* Shadows - Ultra Subtle */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 16px -4px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 12px 24px -6px rgba(0, 0, 0, 0.10);
+  --shadow-2xl: 0 20px 40px -8px rgba(0, 0, 0, 0.12);
+  
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Z-index Scale */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-popover: 500;
+  --z-tooltip: 600;
+}
+
+/* Reset and Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--color-gray-800);
+  background-color: var(--color-gray-50);
+  overflow-x: hidden;
+  letter-spacing: -0.01em;
+}
+
+/* Typography Base Classes */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-gray-900);
+  margin: 0;
+}
+
+h1 { font-size: var(--font-size-4xl); font-weight: var(--font-weight-bold); }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+h4 { font-size: var(--font-size-xl); }
+h5 { font-size: var(--font-size-lg); }
+h6 { font-size: var(--font-size-base); }
+
+p {
+  margin: 0;
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  
+  &:hover {
+    color: var(--color-primary-dark);
+  }
+}
+
+/* Custom Scrollbar - Ultra Minimal */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: var(--radius-full);
+  
+  &:hover {
+    background: var(--color-gray-400);
+  }
+  
+  &:active {
+    background: var(--color-gray-500);
+  }
+}
+
+/* Focus Styles - Refined Accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary-subtle);
+}
+
+/* Utility Classes */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Smooth Animations */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Loading States */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-gray-200) 25%,
+    var(--color-gray-100) 50%,
+    var(--color-gray-200) 75%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Pulse Animation for Interactive Elements */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Subtle Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn var(--transition-base) ease-out;
+}
+
+/* Slide animations */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale animation */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Button hover states */
+button {
+  position: relative;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width var(--transition-base), height var(--transition-base);
+  }
+  
+  &:active::after {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+/* Link underline animation */
+a {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--color-primary);
+    transition: width var(--transition-fast);
+  }
+  
+  &:hover::before {
+    width: 100%;
+  }
+}
+
+/* Card hover elevation */
+.card-hover {
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/* ==============================================
+   DIAGNOSTIC UI COMPONENTS
+   Professional Automotive Diagnostic Design
+   ============================================== */
+
+/* Severity Badge System */
+.severity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all var(--transition-fast);
+  
+  &.critical {
+    background: var(--severity-critical-bg);
+    color: var(--severity-critical);
+    border: 1px solid var(--severity-critical-border);
+  }
+  
+  &.high {
+    background: var(--severity-high-bg);
+    color: var(--severity-high);
+    border: 1px solid var(--severity-high-border);
+  }
+  
+  &.medium {
+    background: var(--severity-medium-bg);
+    color: var(--severity-medium);
+    border: 1px solid var(--severity-medium-border);
+  }
+  
+  &.low {
+    background: var(--severity-low-bg);
+    color: var(--severity-low);
+    border: 1px solid var(--severity-low-border);
+  }
+  
+  &.info {
+    background: var(--severity-info-bg);
+    color: var(--severity-info);
+    border: 1px solid var(--severity-info-border);
+  }
+  
+  .badge-icon {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Fault Code Display */
+.fault-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  
+  &.active {
+    background: var(--color-danger-light);
+    border-color: var(--severity-critical);
+    color: var(--severity-critical);
+  }
+  
+  .code-prefix {
+    color: var(--color-gray-500);
+    font-size: var(--font-size-xs);
+  }
+  
+  .code-value {
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+/* Diagnostic Card */
+.diagnostic-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  transition: all var(--transition-base);
+  
+  &:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-gray-300);
+  }
+  
+  &.critical {
+    border-left: 4px solid var(--severity-critical);
+  }
+  
+  &.high {
+    border-left: 4px solid var(--severity-high);
+  }
+  
+  &.medium {
+    border-left: 4px solid var(--severity-medium);
+  }
+  
+  &.low {
+    border-left: 4px solid var(--severity-low);
+  }
+}
+
+/* Status Indicator */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    
+    &.active {
+      background: var(--status-active);
+      animation: pulse 2s infinite;
+    }
+    
+    &.inactive {
+      background: var(--status-inactive);
+    }
+    
+    &.pending {
+      background: var(--status-pending);
+      animation: pulse 1.5s infinite;
+    }
+    
+    &.error {
+      background: var(--status-error);
+      animation: pulse 1s infinite;
+    }
+  }
+  
+  .status-text {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-700);
+  }
+}
+
+/* Diagnostic Step */
+.diagnostic-step {
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    background: var(--color-gray-50);
+    border-color: var(--color-primary);
+  }
+  
+  .step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-radius: var(--radius-full);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    flex-shrink: 0;
+  }
+  
+  &.completed .step-number {
+    background: var(--status-active);
+  }
+  
+  .step-content {
+    flex: 1;
+    
+    .step-title {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-gray-900);
+      margin-bottom: 0.25rem;
+    }
+    
+    .step-description {
+      color: var(--color-gray-600);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-relaxed);
+    }
+  }
+}
+
+/* Data Grid for Specifications */
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-md);
+  
+  .data-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    
+    .data-label {
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .data-value {
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-gray-900);
+      
+      &.monospace {
+        font-family: var(--font-family-mono);
+      }
+    }
+  }
+}
+
+/* Action Button Group */
+.action-group {
+  display: flex;
+  gap: var(--spacing-sm);
+  
+  .btn-primary {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: 1px solid var(--color-primary);
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    
+    &:hover:not(:disabled) {
+      background: var(--color-primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  .btn-secondary {
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-300);
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    
+    &:hover:not(:disabled) {
+      background: var(--color-gray-50);
+      border-color: var(--color-gray-400);
+      transform: translateY(-1px);
+    }
+  }
+  
+  .btn-danger {
+    background: var(--color-white);
+    color: var(--severity-critical);
+    border: 1px solid var(--severity-critical-border);
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    
+    &:hover:not(:disabled) {
+      background: var(--severity-critical-bg);
+      border-color: var(--severity-critical);
+    }
+  }
+}
+
+/* Tablet-Optimized Layout */
+@media (min-width: 768px) and (max-width: 1280px) {
+  .diagnostic-card {
+    padding: var(--spacing-xl);
+  }
+  
+  .data-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .action-group {
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger {
+      padding: 0.75rem 1.5rem;
+      font-size: var(--font-size-base);
+    }
+  }
+}
+
+/* High Contrast Mode for Shop Environments */
+@media (prefers-contrast: high) {
+  .diagnostic-card {
+    border-width: 2px;
+  }
+  
+  .severity-badge {
+    border-width: 2px;
+    font-weight: var(--font-weight-bold);
+  }
+  
+  .fault-code {
+    border-width: 2px;
+  }
+}

@@ -1,0 +1,162 @@
+<div class="truck-form-container">
+  <div class="form-header">
+    <h2>{{ isEdit ? 'Edit Truck' : 'Add New Truck' }}</h2>
+    <button class="close-btn" (click)="onCancel()" type="button">×</button>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" class="truck-form">
+    <div class="form-section">
+      <h3>Basic Information</h3>
+      
+      <div class="form-group">
+        <label for="unitNumber">Unit Number</label>
+        <input
+          type="text"
+          id="unitNumber"
+          [(ngModel)]="formData.unitNumber"
+          name="unitNumber"
+          class="form-control"
+          placeholder="Enter unit number (e.g., T001, UNIT-123)">
+      </div>
+      
+      <div class="form-group">
+        <label for="model">Truck Model *</label>
+        <input
+          type="text"
+          id="model"
+          [(ngModel)]="formData.model"
+          name="model"
+          class="form-control"
+          [class.error]="errors['model']"
+          placeholder="Enter truck model (e.g., Mercedes-Benz Actros 1845)">
+        <div class="error-message" *ngIf="errors['model']">{{ errors['model'] }}</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>Vehicle Specifications</h3>
+      
+      <div class="form-group">
+        <label for="vin">VIN Number *</label>
+        <input
+          type="text"
+          id="vin"
+          [(ngModel)]="formData.vin"
+          name="vin"
+          class="form-control"
+          [class.error]="errors['vin']"
+          placeholder="Enter VIN number"
+          maxlength="17">
+        <div class="error-message" *ngIf="errors['vin']">{{ errors['vin'] }}</div>
+      </div>
+
+      <div class="form-group">
+        <label for="engineNumber">Engine Number *</label>
+        <input
+          type="text"
+          id="engineNumber"
+          [(ngModel)]="formData.engineNumber"
+          name="engineNumber"
+          class="form-control"
+          [class.error]="errors['engineNumber']"
+          placeholder="Enter engine number">
+        <div class="error-message" *ngIf="errors['engineNumber']">{{ errors['engineNumber'] }}</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="odometerReading">Odometer Reading (km) *</label>
+          <input
+            type="number"
+            id="odometerReading"
+            [(ngModel)]="formData.odometerReading"
+            name="odometerReading"
+            class="form-control"
+            [class.error]="errors['odometerReading']"
+            min="0"
+            placeholder="0">
+          <div class="error-message" *ngIf="errors['odometerReading']">{{ errors['odometerReading'] }}</div>
+        </div>
+
+        <div class="form-group">
+          <label for="engineHours">Engine Hours *</label>
+          <input
+            type="number"
+            id="engineHours"
+            [(ngModel)]="formData.engineHours"
+            name="engineHours"
+            class="form-control"
+            [class.error]="errors['engineHours']"
+            min="0"
+            placeholder="0">
+          <div class="error-message" *ngIf="errors['engineHours']">{{ errors['engineHours'] }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-header">
+        <h3>Failure Reports</h3>
+        <button type="button" class="add-failure-btn" (click)="addFailure()">
+          + Add Failure
+        </button>
+      </div>
+
+      <div *ngIf="formData.failures.length === 0" class="no-failures">
+        <p>No failure reports yet. Click "Add Failure" to add one.</p>
+      </div>
+
+      <div *ngFor="let failure of formData.failures; let i = index; trackBy: trackByIndex" 
+           class="failure-form-group">
+        <div class="failure-header">
+          <h4>Failure #{{ i + 1 }}</h4>
+          <button type="button" class="remove-failure-btn" (click)="removeFailure(i)">
+            Remove
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label [for]="'failureTitle' + i">Title *</label>
+          <input
+            type="text"
+            [id]="'failureTitle' + i"
+            [(ngModel)]="failure.title"
+            [name]="'failureTitle' + i"
+            class="form-control"
+            placeholder="Enter failure title">
+        </div>
+
+        <div class="form-group">
+          <label [for]="'failureDescription' + i">Description *</label>
+          <textarea
+            [id]="'failureDescription' + i"
+            [(ngModel)]="failure.description"
+            [name]="'failureDescription' + i"
+            class="form-control textarea"
+            rows="3"
+            placeholder="Detailed description of the failure"></textarea>
+        </div>
+
+        <!-- New Video Upload Component -->
+        <div class="form-group">
+          <label>Videos</label>
+          <app-video-upload
+            [existingVideos]="failure.videoContent || []"
+            (videoAdded)="onVideoAdded(i, $event)"
+            (videoRemoved)="onVideoRemoved(i, $event)">
+          </app-video-upload>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="onCancel()">
+        Cancel
+      </button>
+      <button type="submit" class="btn-save">
+        {{ isEdit ? 'Update Truck' : 'Add Truck' }}
+      </button>
+    </div>
+  </form>
+</div>

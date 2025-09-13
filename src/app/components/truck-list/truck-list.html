@@ -1,0 +1,159 @@
+<div class="sidebar-container">
+  <!-- Search Section -->
+  <div class="search-section">
+    <div class="search-container">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input 
+        type="text"
+        placeholder="Search trucks..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        class="search-input">
+      <button *ngIf="searchTerm" (click)="clearSearch()" class="clear-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Truck Cards List -->
+  <div class="trucks-list">
+    <div 
+      *ngFor="let truck of filteredTrucks" 
+      class="truck-card"
+      [class.active]="isSelected(truck)"
+      [class.has-critical]="getFailureSeverity(truck) === 'high'"
+      [class.has-warning]="getFailureSeverity(truck) === 'medium'"
+      [class.has-minor]="getFailureSeverity(truck) === 'low'"
+      (click)="selectTruck(truck)">
+      
+      <!-- Card Header -->
+      <div class="card-header">
+        <div class="truck-info">
+          <div class="truck-details">
+            <div class="truck-header">
+              <h3 class="truck-model">{{ truck.model }}</h3>
+              <span class="unit-number" *ngIf="truck.unitNumber">{{ truck.unitNumber }}</span>
+            </div>
+            <p class="truck-vin">{{ truck.vin }}</p>
+          </div>
+        </div>
+        
+        <!-- Status Indicator -->
+        <div class="status-indicator" [ngClass]="getFailureSeverity(truck)">
+          <mat-icon *ngIf="getFailureSeverity(truck) === 'none'">check_circle</mat-icon>
+          <mat-icon *ngIf="getFailureSeverity(truck) !== 'none'">warning</mat-icon>
+        </div>
+      </div>
+
+      <!-- Card Content -->
+      <div class="card-content">
+        <!-- Key Metrics -->
+        <div class="metrics-grid">
+          <div class="metric">
+            <mat-icon>speed</mat-icon>
+            <div class="metric-info">
+              <span class="metric-value">{{ (truck.odometerReading / 1000) | number:'1.0-0' }}K</span>
+              <span class="metric-label">km</span>
+            </div>
+          </div>
+          
+          <div class="metric">
+            <mat-icon>schedule</mat-icon>
+            <div class="metric-info">
+              <span class="metric-value">{{ (truck.engineHours / 1000) | number:'1.1-1' }}K</span>
+              <span class="metric-label">hrs</span>
+            </div>
+          </div>
+          
+          <div class="metric">
+            <mat-icon>assignment</mat-icon>
+            <div class="metric-info">
+              <span class="metric-value">{{ truck.failures.length }}</span>
+              <span class="metric-label">issues</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Status Badge -->
+        <div class="status-badge" [ngClass]="getFailureSeverity(truck)">
+          <span>{{ getFailureSeverityLabel(truck) }}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="filteredTrucks.length === 0" class="empty-state">
+    <p class="empty-message">
+      <span *ngIf="searchTerm">No trucks found</span>
+      <span *ngIf="!searchTerm">No trucks in fleet</span>
+    </p>
+    <button (click)="clearSearch()" *ngIf="searchTerm" class="empty-action">Clear search</button>
+  </div>
+</div>
+
+<!-- Settings Panel -->
+<div *ngIf="showSettingsPanel" class="settings-overlay">
+  <div class="settings-panel">
+    <div class="settings-header">
+      <h2>Fleet Settings</h2>
+      <button (click)="closeSettingsPanel()" class="close-btn">
+        <span class="close-icon">×</span>
+      </button>
+    </div>
+    
+    <div class="settings-content">
+      <!-- Add Truck Section -->
+      <div class="settings-section">
+        <h3>Add New Truck</h3>
+        <p class="section-description">Add a new truck to your fleet</p>
+        <button (click)="addTruck()" class="settings-action-btn primary">
+          <span class="btn-icon">+</span>
+          Add New Truck
+        </button>
+      </div>
+      
+      <!-- Manage Trucks Section -->
+      <div class="settings-section" *ngIf="filteredTrucks.length > 0">
+        <h3>Manage Trucks</h3>
+        <p class="section-description">Edit or remove trucks from your fleet</p>
+        
+        <div class="truck-management-list">
+          <div *ngFor="let truck of filteredTrucks" class="management-item">
+            <div class="item-info">
+              <div class="item-header">
+                <span class="truck-model">{{ truck.model }}</span>
+                <span class="unit-badge" *ngIf="truck.unitNumber">{{ truck.unitNumber }}</span>
+                <span class="truck-vin">{{ truck.vin }}</span>
+              </div>
+              <div class="item-stats">
+                <span class="stat">{{ (truck.odometerReading / 1000) | number:'1.0-0' }}K km</span>
+                <span class="stat">{{ truck.failures.length }} issues</span>
+              </div>
+            </div>
+            <div class="item-actions">
+              <button (click)="editTruck(truck, $event)" class="manage-btn edit">
+                Edit
+              </button>
+              <button (click)="deleteTruck(truck, $event)" class="manage-btn delete">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Truck Form Modal -->
+<div *ngIf="showForm" class="form-overlay">
+  <app-truck-form
+    [truck]="editingTruck"
+    [isEdit]="isEditMode"
+    (save)="onSaveTruck($event)"
+    (cancel)="closeForm()">
+  </app-truck-form>
+</div>
