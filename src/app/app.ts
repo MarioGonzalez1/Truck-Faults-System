@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { TruckListComponent } from './components/truck-list/truck-list';
 import { TruckFormComponent } from './components/truck-form/truck-form';
 import { TruckService } from './services/truck';
+import { Truck, DistanceUnit } from './models/truck.model';
 
 @Component({
   selector: 'app-root',
@@ -107,5 +108,22 @@ export class AppComponent implements OnInit {
         this.loadTrucks();
       });
     }
+  }
+
+  // Distance formatting methods
+  getFormattedDistance(truck: Truck): string {
+    const unit = truck.odometerUnit || DistanceUnit.MILES;
+    const reading = truck.odometerReading;
+
+    if (reading >= 1000) {
+      return (reading / 1000).toFixed(1) + 'K';
+    }
+
+    return reading.toString();
+  }
+
+  getDistanceUnit(truck: Truck): string {
+    const unit = truck.odometerUnit || DistanceUnit.MILES;
+    return unit === DistanceUnit.MILES ? 'mi' : 'km';
   }
 }

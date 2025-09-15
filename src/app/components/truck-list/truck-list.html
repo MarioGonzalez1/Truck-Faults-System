@@ -1,48 +1,38 @@
 <div class="sidebar-container">
-  <!-- Search Section -->
-  <div class="search-section">
-    <div class="search-container">
-      <mat-icon class="search-icon">search</mat-icon>
-      <input 
-        type="text"
-        placeholder="Search trucks..."
-        [(ngModel)]="searchTerm"
-        (input)="onSearch()"
-        class="search-input">
-      <button *ngIf="searchTerm" (click)="clearSearch()" class="clear-btn">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-  </div>
-
-
   <!-- Truck Cards List -->
   <div class="trucks-list">
-    <div 
-      *ngFor="let truck of filteredTrucks" 
+    <div
+      *ngFor="let truck of filteredTrucks"
       class="truck-card"
       [class.active]="isSelected(truck)"
       [class.has-critical]="getFailureSeverity(truck) === 'high'"
       [class.has-warning]="getFailureSeverity(truck) === 'medium'"
       [class.has-minor]="getFailureSeverity(truck) === 'low'"
       (click)="selectTruck(truck)">
-      
+
+      <!-- Unit Number Badge with Status -->
+      <div class="unit-badge"
+           *ngIf="truck.unitNumber"
+           [ngClass]="getFailureSeverity(truck)">
+        <mat-icon *ngIf="getFailureSeverity(truck) !== 'none'" class="badge-icon">warning</mat-icon>
+        <mat-icon *ngIf="getFailureSeverity(truck) === 'none'" class="badge-icon">check_circle</mat-icon>
+        <span class="badge-text">Unit: {{ truck.unitNumber }}</span>
+      </div>
+
       <!-- Card Header -->
       <div class="card-header">
         <div class="truck-info">
+          <div class="manufacturer-logo" *ngIf="getManufacturerLogo(truck)">
+            <img [src]="getManufacturerLogo(truck)" [alt]="truck.manufacturer" class="logo-img">
+          </div>
           <div class="truck-details">
             <div class="truck-header">
-              <h3 class="truck-model">{{ truck.model }}</h3>
-              <span class="unit-number" *ngIf="truck.unitNumber">{{ truck.unitNumber }}</span>
+              <h3 class="truck-model">{{ truck.manufacturer }} {{ truck.model }}</h3>
             </div>
-            <p class="truck-vin">{{ truck.vin }}</p>
+            <p class="truck-vin">VIN: <span [class.missing-data]="isDummyData(truck)">{{ truck.vin }}</span></p>
+            <p class="truck-engine" *ngIf="truck.engineNumber">Engine: <span [class.missing-data]="isDummyData(truck)">{{ truck.engineNumber }}</span></p>
+            <p class="missing-data-notice" *ngIf="isDummyData(truck)">⚠️ Dummy data - Update with Excel info</p>
           </div>
-        </div>
-        
-        <!-- Status Indicator -->
-        <div class="status-indicator" [ngClass]="getFailureSeverity(truck)">
-          <mat-icon *ngIf="getFailureSeverity(truck) === 'none'">check_circle</mat-icon>
-          <mat-icon *ngIf="getFailureSeverity(truck) !== 'none'">warning</mat-icon>
         </div>
       </div>
 
@@ -53,8 +43,8 @@
           <div class="metric">
             <mat-icon>speed</mat-icon>
             <div class="metric-info">
-              <span class="metric-value">{{ (truck.odometerReading / 1000) | number:'1.0-0' }}K</span>
-              <span class="metric-label">km</span>
+              <span class="metric-value">{{ getFormattedDistance(truck) }}</span>
+              <span class="metric-label">{{ getDistanceUnit(truck) }}</span>
             </div>
           </div>
           
@@ -70,14 +60,8 @@
             <mat-icon>assignment</mat-icon>
             <div class="metric-info">
               <span class="metric-value">{{ truck.failures.length }}</span>
-              <span class="metric-label">issues</span>
             </div>
           </div>
-        </div>
-        
-        <!-- Status Badge -->
-        <div class="status-badge" [ngClass]="getFailureSeverity(truck)">
-          <span>{{ getFailureSeverityLabel(truck) }}</span>
         </div>
       </div>
 
@@ -113,6 +97,10 @@
           <span class="btn-icon">+</span>
           Add New Truck
         </button>
+        <button (click)="generateDummyFleet()" class="settings-action-btn secondary">
+          <span class="btn-icon">🚛</span>
+          Generate Fleet Sample Data
+        </button>
       </div>
       
       <!-- Manage Trucks Section -->
@@ -124,13 +112,20 @@
           <div *ngFor="let truck of filteredTrucks" class="management-item">
             <div class="item-info">
               <div class="item-header">
-                <span class="truck-model">{{ truck.model }}</span>
-                <span class="unit-badge" *ngIf="truck.unitNumber">{{ truck.unitNumber }}</span>
+                <div class="header-content">
+                  <div class="manufacturer-logo-small" *ngIf="getManufacturerLogo(truck)">
+                    <img [src]="getManufacturerLogo(truck)" [alt]="truck.manufacturer" class="logo-img-small">
+                  </div>
+                  <div class="truck-info-text">
+                    <span class="truck-model">{{ truck.manufacturer }} {{ truck.model }}</span>
+                    <span class="unit-badge" *ngIf="truck.unitNumber">Unit: {{ truck.unitNumber }}</span>
+                  </div>
+                </div>
                 <span class="truck-vin">{{ truck.vin }}</span>
               </div>
               <div class="item-stats">
-                <span class="stat">{{ (truck.odometerReading / 1000) | number:'1.0-0' }}K km</span>
-                <span class="stat">{{ truck.failures.length }} issues</span>
+                <span class="stat">{{ getFormattedDistance(truck) }} {{ getDistanceUnit(truck) }}</span>
+                <span class="stat">{{ truck.failures.length }}</span>
               </div>
             </div>
             <div class="item-actions">

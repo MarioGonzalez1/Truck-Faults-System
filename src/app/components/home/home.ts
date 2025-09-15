@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TruckService } from '../../services/truck';
-import { Truck } from '../../models/truck.model';
+import { Truck, getManufacturerLogo } from '../../models/truck.model';
 
 interface FailureCategory {
   name: string;
@@ -25,11 +25,13 @@ export class HomeComponent implements OnInit {
   highEngineHours = 0;
   maintenanceDue = 0;
   failureCategories: FailureCategory[] = [];
+  trucks: Truck[] = [];
 
   constructor(private truckService: TruckService) {}
 
   ngOnInit() {
     this.truckService.getTrucks().subscribe(trucks => {
+      this.trucks = trucks;
       this.calculateStats(trucks);
       this.categorizeFailures(trucks);
     });
@@ -84,5 +86,10 @@ export class HomeComponent implements OnInit {
         percentage: this.totalFailures > 0 ? Math.round((count / this.totalFailures) * 100) : 0
       }))
       .sort((a, b) => b.count - a.count);
+  }
+
+  // Get manufacturer logo path
+  getManufacturerLogo(truck: Truck): string {
+    return truck.manufacturer ? getManufacturerLogo(truck.manufacturer) : '';
   }
 }

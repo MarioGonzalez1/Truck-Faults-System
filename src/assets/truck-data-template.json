@@ -1,0 +1,86 @@
+{
+  "fleetData": {
+    "lastUpdated": "2025-09-15T00:00:00.000Z",
+    "totalTrucks": 0,
+    "trucks": []
+  },
+  "dataStructure": {
+    "truck": {
+      "id": "string - VIN number",
+      "manufacturer": "KENWORTH | INTERNATIONAL | VOLVO | FREIGHTLINER | PETERBILT",
+      "model": "string - specific model from fleet",
+      "modelYear": "number - optional",
+      "vin": "string - Vehicle Identification Number",
+      "engineNumber": "string - Engine serial number",
+      "engineManufacturer": "string - optional",
+      "engineModel": "string - optional",
+      "odometerReading": "number - kilometers",
+      "engineHours": "number - total engine hours",
+      "unitNumber": "string - optional fleet unit number",
+      "fleetId": "string - optional",
+      "lastServiceDate": "Date - optional",
+      "nextServiceDue": "Date - optional",
+      "failures": [
+        {
+          "id": "string - unique identifier",
+          "title": "string - failure title",
+          "description": "string - detailed description",
+          "detectedDate": "Date - optional",
+          "resolvedDate": "Date - optional",
+          "technicianNotes": "string - optional",
+          "isExpanded": "boolean - optional UI state",
+          "videoContent": [
+            {
+              "id": "string - unique identifier",
+              "type": "UPLOADED",
+              "url": "string - blob URL",
+              "fileName": "string - original filename",
+              "fileSize": "number - bytes",
+              "duration": "number - seconds, optional",
+              "uploadDate": "Date",
+              "thumbnail": "string - optional blob URL"
+            }
+          ],
+          "faultCode": {
+            "id": "string",
+            "spn": "number - Suspect Parameter Number",
+            "fmi": "number - Failure Mode Identifier",
+            "description": "string",
+            "meaning": "string",
+            "systemCategory": "ENGINE | AFTERTREATMENT | TRANSMISSION | BRAKES | ELECTRICAL | COOLING | FUEL | PNEUMATIC | BODY_CHASSIS",
+            "urgencyLevel": "IMMEDIATE_STOP | URGENT | SCHEDULED | MONITOR",
+            "severity": "CRITICAL | HIGH | MEDIUM | LOW",
+            "canContinueDriving": "boolean"
+          }
+        }
+      ],
+      "maintenanceHistory": [
+        {
+          "id": "string",
+          "date": "Date",
+          "type": "PREVENTIVE | CORRECTIVE | INSPECTION",
+          "description": "string",
+          "performedBy": "string",
+          "cost": "number - optional",
+          "faultCodesResolved": ["string array - optional"],
+          "partsReplaced": ["string array - optional"],
+          "nextServiceRecommended": "Date - optional"
+        }
+      ]
+    }
+  },
+  "availableManufacturers": [
+    "KENWORTH",
+    "INTERNATIONAL",
+    "VOLVO",
+    "FREIGHTLINER",
+    "PETERBILT"
+  ],
+  "fleetModels": {
+    "KENWORTH": ["T660", "T680"],
+    "INTERNATIONAL": ["LoneStar", "LT625"],
+    "VOLVO": ["VNL64T", "VNL760"],
+    "FREIGHTLINER": ["Cascadia"],
+    "PETERBILT": ["579"]
+  }
+}

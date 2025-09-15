@@ -32,10 +32,40 @@ export enum TruckManufacturer {
   KENWORTH = 'KENWORTH',
   INTERNATIONAL = 'INTERNATIONAL',
   VOLVO = 'VOLVO',
-  PETERBILT = 'PETERBILT',
   FREIGHTLINER = 'FREIGHTLINER',
-  MACK = 'MACK',
-  WESTERN_STAR = 'WESTERN_STAR'
+  PETERBILT = 'PETERBILT'
+}
+
+// Helper function to get manufacturer logo path
+export function getManufacturerLogo(manufacturer: TruckManufacturer | string): string {
+  switch (manufacturer) {
+    case TruckManufacturer.KENWORTH:
+      return '/kenworth logo.png';
+    case TruckManufacturer.INTERNATIONAL:
+      return '/international-1-logo-png-transparent.png';
+    case TruckManufacturer.VOLVO:
+      return '/volvo logo.jpeg';
+    case TruckManufacturer.FREIGHTLINER:
+      return '/freightliner logo.png';
+    case TruckManufacturer.PETERBILT:
+      return '/pe3807p73a-peterbilt-logo-peterbilt-logos.png';
+    default:
+      return '';
+  }
+}
+
+// Fleet-specific truck models mapping
+export const FLEET_MODELS = {
+  [TruckManufacturer.KENWORTH]: ['T660', 'T680'],
+  [TruckManufacturer.INTERNATIONAL]: ['LoneStar', 'LT625'],
+  [TruckManufacturer.VOLVO]: ['VNL64T', 'VNL760'],
+  [TruckManufacturer.FREIGHTLINER]: ['Cascadia'],
+  [TruckManufacturer.PETERBILT]: ['579']
+};
+
+// Helper function to get models for a manufacturer
+export function getModelsForManufacturer(manufacturer: TruckManufacturer): string[] {
+  return FLEET_MODELS[manufacturer] || [];
 }
 
 // Engine manufacturer enum
@@ -46,6 +76,41 @@ export enum EngineManufacturer {
   VOLVO = 'VOLVO',
   NAVISTAR = 'NAVISTAR',
   CATERPILLAR = 'CATERPILLAR'
+}
+
+// Distance unit enum
+export enum DistanceUnit {
+  MILES = 'MILES',
+  KILOMETERS = 'KILOMETERS'
+}
+
+// Distance conversion utilities
+export function convertMilesToKm(miles: number): number {
+  return miles * 1.60934;
+}
+
+export function convertKmToMiles(km: number): number {
+  return km / 1.60934;
+}
+
+export function formatDistance(distance: number, unit: DistanceUnit, decimals: number = 0): string {
+  const formatted = distance.toFixed(decimals);
+  const shortUnit = unit === DistanceUnit.MILES ? 'mi' : 'km';
+  return `${formatted} ${shortUnit}`;
+}
+
+export function getDistanceInPreferredUnit(distance: number, currentUnit: DistanceUnit, preferredUnit: DistanceUnit): number {
+  if (currentUnit === preferredUnit) {
+    return distance;
+  }
+
+  if (currentUnit === DistanceUnit.MILES && preferredUnit === DistanceUnit.KILOMETERS) {
+    return convertMilesToKm(distance);
+  } else if (currentUnit === DistanceUnit.KILOMETERS && preferredUnit === DistanceUnit.MILES) {
+    return convertKmToMiles(distance);
+  }
+
+  return distance;
 }
 
 // Diagnostic step interface
@@ -135,6 +200,43 @@ export interface VideoContent {
   thumbnail?: string;                   // Thumbnail image blob URL
 }
 
+// Parts and costs interfaces
+export interface PartSupplier {
+  id: string;
+  name: string;
+  contactInfo?: string;
+  rating?: number;                      // 1-5 star rating
+  deliveryTime?: string;                // e.g., "2-3 days"
+}
+
+export interface PartCost {
+  id: string;
+  partNumber: string;
+  partName: string;
+  description?: string;
+  category: SystemCategory;
+  supplier: PartSupplier;
+  unitPrice: number;
+  currency: string;
+  quantity: number;
+  totalCost: number;
+  dateOrdered?: Date;
+  dateReceived?: Date;
+  warrantyPeriod?: string;              // e.g., "12 months"
+  notes?: string;
+}
+
+export interface RepairCostSummary {
+  id: string;
+  failureId: string;
+  totalPartsCost: number;
+  currency: string;
+  partsUsed: PartCost[];
+  dateCompleted?: Date;
+  notes?: string;
+  isWarrantyClaim?: boolean;
+}
+
 // Failure module interface
 export interface FailureModule {
   id: string;
@@ -146,6 +248,7 @@ export interface FailureModule {
   detectedDate?: Date;
   resolvedDate?: Date;
   technicianNotes?: string;
+  repairCosts?: RepairCostSummary;     // Cost tracking for this failure
 }
 
 // Enhanced truck interface
@@ -159,6 +262,7 @@ export interface Truck {
   engineManufacturer?: EngineManufacturer;
   engineModel?: string;
   odometerReading: number;
+  odometerUnit?: DistanceUnit;
   engineHours: number;
   failures: FailureModule[];
   maintenanceHistory?: MaintenanceRecord[];
@@ -166,6 +270,9 @@ export interface Truck {
   nextServiceDue?: Date;
   fleetId?: string;
   unitNumber?: string;
+  totalMaintenanceCost?: number;         // Total lifetime maintenance cost
+  costPerMile?: number;                  // Cost per mile calculation
+  lastCostUpdate?: Date;                 // When costs were last calculated
 }
 
 // Maintenance record interface

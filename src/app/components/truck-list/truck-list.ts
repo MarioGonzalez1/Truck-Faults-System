@@ -11,7 +11,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TruckService } from '../../services/truck';
-import { Truck } from '../../models/truck.model';
+import { Truck, getManufacturerLogo, DistanceUnit, formatDistance } from '../../models/truck.model';
 import { TruckFormComponent } from '../truck-form/truck-form';
 
 @Component({
@@ -167,7 +167,7 @@ export class TruckListComponent implements OnInit {
     switch (severity) {
       case 'high': return 'Critical';
       case 'medium': return 'Attention';
-      case 'low': return 'Minor';
+      case 'low': return 'Active';
       default: return 'Operational';
     }
   }
@@ -211,5 +211,42 @@ export class TruckListComponent implements OnInit {
 
   closeSettingsPanel() {
     this.showSettingsPanel = false;
+  }
+
+  // Get manufacturer logo path
+  getManufacturerLogo(truck: Truck): string {
+    return truck.manufacturer ? getManufacturerLogo(truck.manufacturer) : '';
+  }
+
+  generateDummyFleet() {
+    this.truckService.generateDummyFleetData().subscribe(() => {
+      this.loadTrucks();
+      alert('Fleet sample data generated! 8 trucks have been added to your fleet.');
+    });
+  }
+
+  isDummyData(truck: Truck): boolean {
+    // Check if truck has dummy data characteristics
+    return truck.fleetId === 'FLEET001' ||
+           truck.vin?.startsWith('WDB9630421L') ||
+           truck.engineNumber?.startsWith('OM471LA-') ||
+           ['1001', '1002', '1003', '1004', '1005', '1006', '1007', '1008'].includes(truck.unitNumber || '');
+  }
+
+  // Distance formatting methods
+  getFormattedDistance(truck: Truck): string {
+    const unit = truck.odometerUnit || DistanceUnit.MILES;
+    const reading = truck.odometerReading;
+
+    if (reading >= 1000) {
+      return (reading / 1000).toFixed(1) + 'K';
+    }
+
+    return reading.toString();
+  }
+
+  getDistanceUnit(truck: Truck): string {
+    const unit = truck.odometerUnit || DistanceUnit.MILES;
+    return unit === DistanceUnit.MILES ? 'mi' : 'km';
   }
 }

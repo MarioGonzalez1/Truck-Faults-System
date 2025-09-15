@@ -68,7 +68,35 @@
         </div>
       </div>
     </div>
-    
+
+    <!-- Fleet by Manufacturer -->
+    <div class="manufacturer-section" *ngIf="trucks.length > 0">
+      <div class="section-header">
+        <i class="fas fa-industry"></i>
+        <h3>Fleet by Manufacturer</h3>
+      </div>
+
+      <div class="manufacturer-grid">
+        <div class="manufacturer-item" *ngFor="let truck of trucks" [class]="'manufacturer-' + truck.manufacturer?.toLowerCase()">
+          <div class="manufacturer-logo-container" *ngIf="getManufacturerLogo(truck)">
+            <img [src]="getManufacturerLogo(truck)" [alt]="truck.manufacturer" class="manufacturer-logo-img">
+          </div>
+          <div class="truck-info">
+            <div class="truck-model">{{ truck.model }}</div>
+            <div class="truck-unit" *ngIf="truck.unitNumber">{{ truck.unitNumber }}</div>
+            <div class="truck-status" [ngClass]="{
+              'status-critical': truck.failures.length >= 3,
+              'status-warning': truck.failures.length >= 2 && truck.failures.length < 3,
+              'status-minor': truck.failures.length >= 1 && truck.failures.length < 2,
+              'status-good': truck.failures.length === 0
+            }">
+              {{ truck.failures.length === 0 ? 'Operational' : truck.failures.length + ' issue' + (truck.failures.length > 1 ? 's' : '') }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Fleet Status -->
     <div class="status-section">
       <div class="section-header">

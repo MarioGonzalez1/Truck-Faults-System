@@ -36,7 +36,101 @@
     border-bottom: 1px solid #e2e8f0;
     margin: -16px -16px 20px -16px;
     padding: 20px 24px;
-    
+
+    .header-text-only {
+      width: 100%;
+
+      .header-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+
+        mat-card-title {
+          font-size: 18px;
+          font-weight: 600;
+          color: #1e293b;
+          margin: 0;
+        }
+
+        // Unit Number Badge with Integrated Status (Double Size)
+        .unit-badge {
+          color: #64748b;
+          font-size: 20px;
+          font-weight: 600;
+          padding: 8px 16px;
+          border-radius: 12px;
+          z-index: 10;
+          letter-spacing: 0.3px;
+          line-height: 1.2;
+          font-family: 'Roboto', sans-serif;
+          white-space: nowrap;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: transparent;
+          border: 1px solid #1976d2;
+          box-shadow: none;
+
+          // Icon styling with status-based colors (Double Size)
+          .badge-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+          }
+
+          // Text styling (Double Size)
+          .badge-text {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            color: #64748b;
+          }
+
+          // Icon colors based on failure severity
+          &.none .badge-icon {
+            color: #22c55e; // Green for no failures
+          }
+
+          &.low .badge-icon {
+            color: #f59e0b; // Light orange for 1 failure
+          }
+
+          &.medium .badge-icon {
+            color: #ea580c; // Orange for 2 failures
+          }
+
+          &.high .badge-icon {
+            color: #dc2626; // Red for 3+ failures
+            animation: subtle-pulse 2s infinite;
+          }
+        }
+      }
+
+      .manufacturer-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .manufacturer-logo-small {
+          width: 20px;
+          height: 20px;
+          object-fit: contain;
+          border-radius: 3px;
+          background: white;
+          padding: 2px;
+          border: 1px solid #e2e8f0;
+          flex-shrink: 0;
+        }
+      }
+    }
+
     mat-card-title {
       font-size: 18px;
       font-weight: 600;
@@ -651,5 +745,17 @@
 
   .video-upload-section {
     padding: 16px !important;
+  }
+}
+
+// Subtle pulse animation for critical failures
+@keyframes subtle-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
   }
 }

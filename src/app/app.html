@@ -5,7 +5,35 @@
         <img src="Forza dorado tipo foil png.png" alt="Forza Logo" class="logo">
         <h1 class="title">Fault Analysis System</h1>
       </div>
-      
+
+      <div class="header-actions">
+        <!-- Settings Button -->
+        <button (click)="toggleSettingsPanel()" class="settings-btn" title="Fleet Settings">
+          <mat-icon>settings</mat-icon>
+        </button>
+
+        <!-- Search Section -->
+        <div class="header-search">
+          <div class="search-container">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input
+              type="text"
+              placeholder="Search trucks..."
+              [(ngModel)]="searchTerm"
+              (input)="onSearch()"
+              class="search-input">
+            <button *ngIf="searchTerm" (click)="clearSearch()" class="clear-btn">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sign Out Button -->
+        <button class="sign-out-btn" title="Sign Out">
+          <mat-icon>logout</mat-icon>
+          <span class="sign-out-text">Sign Out</span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -22,12 +50,8 @@
       </div>
       <div class="sidebar-footer">
         <button (click)="goToDashboard()" class="dashboard-btn" title="Fleet Scorecard">
-          <span class="dashboard-icon">📊</span>
+          <mat-icon class="dashboard-icon">dashboard</mat-icon>
           Fleet Scorecard
-        </button>
-        <button (click)="toggleSettingsPanel()" class="settings-btn" title="Fleet Settings">
-          <span class="settings-icon">⚙️</span>
-          Settings
         </button>
       </div>
     </aside>
@@ -72,7 +96,7 @@
                 </div>
                 <div class="truck-vin">{{ truck.vin }}</div>
                 <div class="truck-metrics">
-                  <span class="metric">{{ truck.odometerReading | number:'1.0-0' }} km</span>
+                  <span class="metric">{{ getFormattedDistance(truck) }} {{ getDistanceUnit(truck) }}</span>
                   <span class="metric">{{ truck.engineHours | number:'1.0-0' }} hrs</span>
                   <span class="metric">{{ truck.failures.length }} issues</span>
                 </div>

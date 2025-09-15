@@ -10,7 +10,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TruckService } from '../../services/truck';
-import { Truck, FailureModule, VideoContent } from '../../models/truck.model';
+import { Truck, FailureModule, VideoContent, getManufacturerLogo, DistanceUnit } from '../../models/truck.model';
 import { TruckFormComponent } from '../truck-form/truck-form';
 
 @Component({
@@ -152,5 +152,35 @@ export class TruckDetailsComponent implements OnInit {
   closeVideoPlayer() {
     this.showVideoPlayer = false;
     this.currentVideo = null;
+  }
+
+  // Get manufacturer logo path
+  getManufacturerLogo(): string {
+    return this.truck?.manufacturer ? getManufacturerLogo(this.truck.manufacturer) : '';
+  }
+
+  // Distance formatting methods
+  getFormattedDistance(): string {
+    if (!this.truck) return '0';
+
+    const unit = this.truck.odometerUnit || DistanceUnit.MILES;
+    const reading = this.truck.odometerReading;
+
+    return reading.toLocaleString();
+  }
+
+  getDistanceUnit(): string {
+    if (!this.truck) return 'mi';
+
+    const unit = this.truck.odometerUnit || DistanceUnit.MILES;
+    return unit === DistanceUnit.MILES ? 'mi' : 'km';
+  }
+
+  // Helper method for failure severity (same as truck-list component)
+  getFailureSeverity(truck: Truck): string {
+    if (truck.failures.length === 0) return 'none';
+    if (truck.failures.length >= 3) return 'high';
+    if (truck.failures.length >= 2) return 'medium';
+    return 'low';
   }
 }

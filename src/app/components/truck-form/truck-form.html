@@ -5,77 +5,135 @@
   </div>
 
   <form (ngSubmit)="onSubmit()" class="truck-form">
-    <div class="form-section">
-      <h3>Basic Information</h3>
-      
-      <div class="form-group">
-        <label for="unitNumber">Unit Number</label>
-        <input
-          type="text"
-          id="unitNumber"
-          [(ngModel)]="formData.unitNumber"
-          name="unitNumber"
-          class="form-control"
-          placeholder="Enter unit number (e.g., T001, UNIT-123)">
-      </div>
-      
-      <div class="form-group">
-        <label for="model">Truck Model *</label>
-        <input
-          type="text"
-          id="model"
-          [(ngModel)]="formData.model"
-          name="model"
-          class="form-control"
-          [class.error]="errors['model']"
-          placeholder="Enter truck model (e.g., Mercedes-Benz Actros 1845)">
-        <div class="error-message" *ngIf="errors['model']">{{ errors['model'] }}</div>
-      </div>
-    </div>
+    <!-- Left Column: Basic Information & Vehicle Specifications -->
+    <div class="form-column">
+      <div class="form-section">
+        <h3>Basic Information</h3>
 
-    <div class="form-section">
-      <h3>Vehicle Specifications</h3>
-      
-      <div class="form-group">
-        <label for="vin">VIN Number *</label>
-        <input
-          type="text"
-          id="vin"
-          [(ngModel)]="formData.vin"
-          name="vin"
-          class="form-control"
-          [class.error]="errors['vin']"
-          placeholder="Enter VIN number"
-          maxlength="17">
-        <div class="error-message" *ngIf="errors['vin']">{{ errors['vin'] }}</div>
-      </div>
-
-      <div class="form-group">
-        <label for="engineNumber">Engine Number *</label>
-        <input
-          type="text"
-          id="engineNumber"
-          [(ngModel)]="formData.engineNumber"
-          name="engineNumber"
-          class="form-control"
-          [class.error]="errors['engineNumber']"
-          placeholder="Enter engine number">
-        <div class="error-message" *ngIf="errors['engineNumber']">{{ errors['engineNumber'] }}</div>
-      </div>
-
-      <div class="form-row">
         <div class="form-group">
-          <label for="odometerReading">Odometer Reading (km) *</label>
+          <label for="unitNumber">Unit Number</label>
+          <input
+            type="text"
+            id="unitNumber"
+            [(ngModel)]="formData.unitNumber"
+            name="unitNumber"
+            class="form-control"
+            placeholder="Enter unit number (e.g., T001, UNIT-123)">
+        </div>
+
+        <div class="form-group">
+          <label for="vin">VIN Number *</label>
+          <input
+            type="text"
+            id="vin"
+            [(ngModel)]="formData.vin"
+            name="vin"
+            class="form-control"
+            [class.error]="errors['vin']"
+            [class.vin-valid]="vinDecodedInfo && vinDecodedInfo.isValid"
+            (input)="onVinChange($event)"
+            (blur)="onVinBlur()"
+            placeholder="Enter 17-character VIN number"
+            maxlength="17">
+          <div class="vin-info" *ngIf="vinDecodedInfo && vinDecodedInfo.isValid">
+            <span class="vin-success">✓ {{ getVinDisplayInfo() }}</span>
+            <button type="button" class="auto-fill-btn" (click)="autoFillFromVin()" *ngIf="canAutoFill()">
+              Auto-fill fields
+            </button>
+          </div>
+          <div class="error-message" *ngIf="errors['vin']">{{ errors['vin'] }}</div>
+          <small class="form-hint">VIN will automatically decode manufacturer and year information</small>
+        </div>
+
+        <div class="form-group">
+          <label for="manufacturer">Manufacturer *</label>
+          <select
+            id="manufacturer"
+            [(ngModel)]="formData.manufacturer"
+            name="manufacturer"
+            class="form-control"
+            [class.error]="errors['manufacturer']"
+            (change)="onManufacturerChange()">
+            <option value="">Select manufacturer</option>
+            <option value="KENWORTH">Kenworth</option>
+            <option value="INTERNATIONAL">International</option>
+            <option value="FREIGHTLINER">Freightliner</option>
+            <option value="VOLVO">Volvo</option>
+            <option value="PETERBILT">Peterbilt</option>
+          </select>
+          <div class="error-message" *ngIf="errors['manufacturer']">{{ errors['manufacturer'] }}</div>
+        </div>
+
+        <div class="form-group">
+          <label for="model">Truck Model *</label>
+          <select
+            id="model"
+            [(ngModel)]="formData.model"
+            name="model"
+            class="form-control"
+            [class.error]="errors['model']"
+            [disabled]="!formData.manufacturer">
+            <option value="">{{ formData.manufacturer ? 'Select model' : 'Select manufacturer first' }}</option>
+            <option *ngFor="let model of availableModels" [value]="model">{{ model }}</option>
+          </select>
+          <div class="error-message" *ngIf="errors['model']">{{ errors['model'] }}</div>
+        </div>
+
+        <div class="form-group">
+          <label for="modelYear">Model Year</label>
           <input
             type="number"
-            id="odometerReading"
-            [(ngModel)]="formData.odometerReading"
-            name="odometerReading"
+            id="modelYear"
+            [(ngModel)]="formData.modelYear"
+            name="modelYear"
             class="form-control"
-            [class.error]="errors['odometerReading']"
-            min="0"
-            placeholder="0">
+            min="1990"
+            max="2030"
+            placeholder="Enter model year (e.g., 2020)">
+          <small class="form-hint">Will be auto-filled when VIN is entered</small>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Vehicle Specifications</h3>
+
+        <div class="form-group">
+          <label for="engineNumber">Engine Number *</label>
+          <input
+            type="text"
+            id="engineNumber"
+            [(ngModel)]="formData.engineNumber"
+            name="engineNumber"
+            class="form-control"
+            [class.error]="errors['engineNumber']"
+            placeholder="Enter engine number">
+          <div class="error-message" *ngIf="errors['engineNumber']">{{ errors['engineNumber'] }}</div>
+        </div>
+
+        <div class="form-group">
+          <label for="odometerReading">Odometer Reading *</label>
+          <div class="odometer-input-group">
+            <input
+              type="number"
+              id="odometerReading"
+              [(ngModel)]="formData.odometerReading"
+              name="odometerReading"
+              class="form-control odometer-input"
+              [class.error]="errors['odometerReading']"
+              min="0"
+              placeholder="0">
+            <select
+              id="odometerUnit"
+              [(ngModel)]="formData.odometerUnit"
+              name="odometerUnit"
+              class="form-control unit-select"
+              (change)="onDistanceUnitChange()">
+              <option value="MILES">Miles</option>
+              <option value="KILOMETERS">Kilometers</option>
+            </select>
+          </div>
           <div class="error-message" *ngIf="errors['odometerReading']">{{ errors['odometerReading'] }}</div>
+          <small class="form-hint" *ngIf="getDistanceConversion()">{{ getDistanceConversion() }}</small>
         </div>
 
         <div class="form-group">
@@ -94,59 +152,61 @@
       </div>
     </div>
 
-    <div class="form-section">
-      <div class="section-header">
-        <h3>Failure Reports</h3>
-        <button type="button" class="add-failure-btn" (click)="addFailure()">
-          + Add Failure
-        </button>
-      </div>
-
-      <div *ngIf="formData.failures.length === 0" class="no-failures">
-        <p>No failure reports yet. Click "Add Failure" to add one.</p>
-      </div>
-
-      <div *ngFor="let failure of formData.failures; let i = index; trackBy: trackByIndex" 
-           class="failure-form-group">
-        <div class="failure-header">
-          <h4>Failure #{{ i + 1 }}</h4>
-          <button type="button" class="remove-failure-btn" (click)="removeFailure(i)">
-            Remove
+    <!-- Right Column: Failure Reports -->
+    <div class="form-column">
+      <div class="form-section">
+        <div class="section-header">
+          <h3>Failure Reports</h3>
+          <button type="button" class="add-failure-btn" (click)="addFailure()">
+            + Add Failure
           </button>
         </div>
 
-        <div class="form-group">
-          <label [for]="'failureTitle' + i">Title *</label>
-          <input
-            type="text"
-            [id]="'failureTitle' + i"
-            [(ngModel)]="failure.title"
-            [name]="'failureTitle' + i"
-            class="form-control"
-            placeholder="Enter failure title">
+        <div *ngIf="formData.failures.length === 0" class="no-failures">
+          <p>No failure reports yet. Click "Add Failure" to add one.</p>
         </div>
 
-        <div class="form-group">
-          <label [for]="'failureDescription' + i">Description *</label>
-          <textarea
-            [id]="'failureDescription' + i"
-            [(ngModel)]="failure.description"
-            [name]="'failureDescription' + i"
-            class="form-control textarea"
-            rows="3"
-            placeholder="Detailed description of the failure"></textarea>
-        </div>
+        <div *ngFor="let failure of formData.failures; let i = index; trackBy: trackByIndex"
+             class="failure-form-group">
+          <div class="failure-header">
+            <h4>Failure #{{ i + 1 }}</h4>
+            <button type="button" class="remove-failure-btn" (click)="removeFailure(i)">
+              Remove
+            </button>
+          </div>
 
-        <!-- New Video Upload Component -->
-        <div class="form-group">
-          <label>Videos</label>
-          <app-video-upload
-            [existingVideos]="failure.videoContent || []"
-            (videoAdded)="onVideoAdded(i, $event)"
-            (videoRemoved)="onVideoRemoved(i, $event)">
-          </app-video-upload>
-        </div>
+          <div class="form-group">
+            <label [for]="'failureTitle' + i">Title *</label>
+            <input
+              type="text"
+              [id]="'failureTitle' + i"
+              [(ngModel)]="failure.title"
+              [name]="'failureTitle' + i"
+              class="form-control"
+              placeholder="Enter failure title">
+          </div>
 
+          <div class="form-group">
+            <label [for]="'failureDescription' + i">Description *</label>
+            <textarea
+              [id]="'failureDescription' + i"
+              [(ngModel)]="failure.description"
+              [name]="'failureDescription' + i"
+              class="form-control textarea"
+              rows="3"
+              placeholder="Detailed description of the failure"></textarea>
+          </div>
+
+          <!-- New Video Upload Component -->
+          <div class="form-group">
+            <label>Videos</label>
+            <app-video-upload
+              [existingVideos]="failure.videoContent || []"
+              (videoAdded)="onVideoAdded(i, $event)"
+              (videoRemoved)="onVideoRemoved(i, $event)">
+            </app-video-upload>
+          </div>
+        </div>
       </div>
     </div>
 

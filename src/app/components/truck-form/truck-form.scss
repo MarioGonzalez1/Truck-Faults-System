@@ -3,10 +3,10 @@
   background: var(--color-white);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-2xl);
-  max-width: 720px;
-  width: 100%;
+  max-width: 1200px;
+  width: 95vw;
   margin: 0 auto;
-  max-height: 85vh;
+  max-height: 90vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -58,6 +58,15 @@
   padding: var(--spacing-xl);
   overflow-y: auto;
   flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xl);
+  align-items: start;
+}
+
+// Form Column Layout
+.form-column {
+  min-width: 0;
 }
 
 // Form Sections
@@ -342,45 +351,154 @@
 }
 
 // Responsive Design
+@media (max-width: 1024px) {
+  .truck-form {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .truck-form-container {
+    max-width: 720px;
+    width: 95vw;
+  }
+}
+
 @media (max-width: 768px) {
   .truck-form-container {
     margin: var(--spacing-md);
     max-height: calc(100vh - 2rem);
     max-width: 100%;
+    width: calc(100vw - 2rem);
   }
-  
+
   .form-header {
     padding: var(--spacing-md);
   }
-  
+
   .truck-form {
     padding: var(--spacing-md);
+    grid-template-columns: 1fr;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
     gap: var(--spacing-md);
   }
-  
+
   .form-actions {
     padding: var(--spacing-md);
     flex-direction: column-reverse;
-    
+
     button {
       width: 100%;
     }
   }
-  
+
   .video-url-group {
     flex-wrap: wrap;
-    
+
     .form-control {
       width: 100%;
       flex: none;
     }
-    
+
     .remove-video-btn {
       margin-left: auto;
+    }
+  }
+}
+
+// ================================================
+// VIN Decoder Styles
+// ================================================
+
+.vin-info {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background-color: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vin-success {
+  color: #0ea5e9;
+  font-weight: 500;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.auto-fill-btn {
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #0284c7;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.form-control.vin-valid {
+  border-color: #0ea5e9;
+  background-color: #f0f9ff;
+}
+
+.form-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+// ================================================
+// Odometer Input Group Styles
+// ================================================
+
+.odometer-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+
+  .odometer-input {
+    flex: 2;
+    min-width: 0;
+  }
+
+  .unit-select {
+    flex: 1;
+    min-width: 90px;
+    max-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .odometer-input-group {
+    flex-direction: column;
+    gap: 8px;
+
+    .odometer-input,
+    .unit-select {
+      flex: none;
+      width: 100%;
+      max-width: none;
     }
   }
 }
