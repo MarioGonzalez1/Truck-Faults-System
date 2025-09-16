@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -30,7 +30,7 @@ import { VideoUploadService } from '../../services/video-upload.service';
   templateUrl: './video-upload.html',
   styleUrls: ['./video-upload.scss']
 })
-export class VideoUploadComponent {
+export class VideoUploadComponent implements OnDestroy {
   @Input() existingVideos: VideoContent[] = [];
   @Output() videoAdded = new EventEmitter<VideoContent>();
   @Output() videoRemoved = new EventEmitter<VideoContent>();
@@ -45,12 +45,21 @@ export class VideoUploadComponent {
     private snackBar: MatSnackBar
   ) {}
 
+  ngOnDestroy(): void {
+    // Clean up any remaining blob URLs when component is destroyed
+    this.existingVideos.forEach(video => {
+      this.videoUploadService.cleanupBlobUrl(video.url);
+    });
+  }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.uploadVideoFile(file);
     }
+    // Clear the input immediately after processing to ensure fresh state
+    input.value = '';
   }
 
   private uploadVideoFile(file: File): void {
@@ -81,24 +90,17 @@ export class VideoUploadComponent {
         this.uploadProgress = 100;
         
         setTimeout(() => {
-          this.isUploading = false;
-          this.uploadProgress = 0;
+          this.resetUploadState();
           this.videoAdded.emit(videoContent);
           this.snackBar.open('Video uploaded successfully!', 'Close', {
             duration: 3000,
             panelClass: ['success-snackbar']
           });
-          
-          // Reset file input
-          if (this.fileInput) {
-            this.fileInput.nativeElement.value = '';
-          }
         }, 500);
       },
       error: (error) => {
         clearInterval(progressInterval);
-        this.isUploading = false;
-        this.uploadProgress = 0;
+        this.resetUploadState();
         this.snackBar.open('Failed to upload video: ' + error, 'Close', {
           duration: 5000,
           panelClass: ['error-snackbar']
@@ -108,15 +110,34 @@ export class VideoUploadComponent {
   }
 
 
-  removeVideo(video: VideoContent): void {
-    this.videoRemoved.emit(video);
-    
-    // Clean up blob URL
-    this.videoUploadService.cleanupBlobUrl(video.url);
-    
-    this.snackBar.open('Video removed', 'Close', {
-      duration: 2000
-    });
+  removeVideo(video: VideoContent, event?: Event): boolean {
+    // Prevent any event propagation that might interfere with the form
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+
+    // Use setTimeout to defer the removal to avoid interfering with current event cycle
+    setTimeout(() => {
+      // Emit the removal event
+      this.videoRemoved.emit(video);
+
+      // Clean up blob URL to prevent memory leaks
+      this.videoUploadService.cleanupBlobUrl(video.url);
+
+      // Reset file input to allow selecting the same file again
+      if (this.fileInput) {
+        this.fileInput.nativeElement.value = '';
+      }
+
+      this.snackBar.open('Video removed', 'Close', {
+        duration: 2000
+      });
+    }, 0);
+
+    // Return false to prevent any further event propagation
+    return false;
   }
 
   getVideoDisplayName(video: VideoContent): string {
@@ -136,6 +157,18 @@ export class VideoUploadComponent {
 
 
   triggerFileInput(): void {
+    // Ensure clean state before opening file dialog
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
     this.fileInput.nativeElement.click();
+  }
+
+  private resetUploadState(): void {
+    this.isUploading = false;
+    this.uploadProgress = 0;
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 }

@@ -34,11 +34,12 @@
       </div>
 
       <div class="upload-actions">
-        <button 
-          mat-raised-button 
-          color="primary" 
+        <button
+          mat-raised-button
+          color="primary"
           (click)="triggerFileInput()"
-          [disabled]="isUploading">
+          [disabled]="isUploading"
+          type="button">
           <mat-icon>add</mat-icon>
           Select Video File
         </button>
@@ -81,11 +82,12 @@
             </div>
 
             <div class="video-actions">
-              <button 
-                mat-icon-button 
-                color="warn" 
-                (click)="removeVideo(video)"
-                matTooltip="Remove video">
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="removeVideo(video, $event); false"
+                matTooltip="Remove video"
+                type="button">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
