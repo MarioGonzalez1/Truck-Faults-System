@@ -1,7 +1,7 @@
 // App container - Sidebar Layout
 .app-container {
   height: 100vh;
-  background: #d1d5db;
+  background: #f3f4f6;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -14,6 +14,11 @@
   z-index: 50;
   flex-shrink: 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: all var(--transition-base);
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .header-content {
@@ -76,6 +81,61 @@
   align-items: center;
   gap: 16px;
   flex: 1;
+}
+
+.dashboard-btn-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #1976d2;
+  border: 1px solid #1976d2;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left var(--transition-base);
+  }
+
+  &:hover {
+    background: #1565c0;
+    border-color: #1565c0;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(1.02);
+    transition: all var(--transition-fast);
+  }
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .btn-text {
+    font-size: 14px;
+    font-weight: 600;
+  }
 }
 
 .settings-btn {
@@ -234,7 +294,8 @@
   width: 100%;
   gap: 2px;
   overflow: hidden;
-  min-height: 0;
+  height: calc(100vh - 80px); // Subtract header height
+  background: #f3f4f6;
 }
 
 // Sidebar - Cards Container
@@ -247,6 +308,7 @@
   flex-direction: column;
   flex-shrink: 0;
   transition: opacity 0.3s ease;
+  height: 100%;
 
   &.collapsed {
     display: none;
@@ -256,44 +318,23 @@
 .sidebar-content {
   flex: 1;
   overflow-y: auto;
-}
+  min-height: 0; // Important for flex children with overflow
 
-.sidebar-footer {
-  padding: 16px;
-  border-top: 1px solid #d1d5db;
-  background: #f3f4f6;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
 
-  .dashboard-btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 16px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    background: white;
-    color: #475569;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
 
     &:hover {
-      background: #e3f2fd;
-      border-color: #1976d2;
-      color: #1976d2;
-      transform: translateY(-1px);
-    }
-
-    .dashboard-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
+      background: #94a3b8;
     }
   }
 }
@@ -302,10 +343,29 @@
 .content {
   flex: 1;
   background: #f3f4f6;
-  overflow: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
+
+  // Custom scrollbar for content area
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+
+    &:hover {
+      background: #94a3b8;
+    }
+  }
 }
 
 // Responsive design - Tablet
@@ -324,6 +384,95 @@
     &.collapsed {
       margin-left: -380px;
     }
+  }
+}
+
+// Manage Trucks Search Styles
+.manage-search-container {
+  margin-bottom: 20px;
+}
+
+.search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-field .search-icon {
+  position: absolute;
+  left: 12px;
+  color: #6b7280;
+  font-size: 18px;
+  z-index: 1;
+}
+
+.search-field .search-input {
+  width: 100%;
+  padding: 12px 16px 12px 45px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  color: #374151;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+}
+
+.search-field .clear-search-btn {
+  position: absolute;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f3f4f6;
+    color: #374151;
+  }
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #d1d5db;
+    margin-bottom: 16px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
   }
 }
 

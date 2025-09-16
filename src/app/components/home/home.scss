@@ -1,24 +1,28 @@
 // Dashboard Container - Sober Professional Design
 .dashboard-container {
-  padding: 24px;
+  padding: 16px;
   height: 100%;
-  overflow-y: auto;
   background: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
 }
 
 // Dashboard Header - Left Aligned
 .dashboard-header {
   text-align: left;
-  margin-bottom: 32px;
-  
+  margin-bottom: 20px;
+
   h1 {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 600;
     color: #1a1d23;
-    margin: 0 0 8px 0;
+    margin: 0 0 4px 0;
     letter-spacing: -0.5px;
   }
-  
+
   p {
     font-size: 14px;
     color: #6b7280;
@@ -32,7 +36,29 @@
   width: 100%;
   margin: 0;
   display: grid;
-  gap: 32px;
+  gap: 20px;
+  flex: 1;
+  align-content: start;
+  overflow-y: auto;
+  min-height: 0;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+
+    &:hover {
+      background: #94a3b8;
+    }
+  }
 }
 
 // Key Metrics Section - Clean Cards
@@ -46,15 +72,22 @@
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 24px;
+  padding: 18px;
   display: flex;
   align-items: center;
   gap: 16px;
-  transition: all 0.2s ease;
-  
+  transition: all var(--transition-base);
+  cursor: pointer;
+
   &:hover {
     border-color: #d1d5db;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px) scale(1.02);
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(1.01);
+    transition: all var(--transition-fast);
   }
   
   &.alert {
@@ -109,7 +142,14 @@
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 24px;
+  padding: 20px;
+
+  .section-description {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 20px 0;
+    line-height: 1.4;
+  }
 }
 
 .section-header {
@@ -137,54 +177,94 @@
 }
 
 .analysis-item {
-  display: grid;
-  grid-template-columns: 1fr 2fr auto;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 0;
+  padding: 16px 0;
   border-bottom: 1px solid #f3f4f6;
-  
+
   &:last-child {
     border-bottom: none;
   }
+}
+
+.analysis-header {
+  margin-bottom: 12px;
 }
 
 .analysis-label {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 8px;
 }
 
 .category-name {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   color: #374151;
 }
 
+.category-stats {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
 .category-count {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   color: #6b7280;
-  background: #e5e7eb;
-  padding: 2px 8px;
-  border-radius: 12px;
+}
+
+.category-percentage {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.analysis-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .analysis-bar {
-  height: 6px;
+  flex: 1;
+  height: 8px;
   background: #e5e7eb;
-  border-radius: 3px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .bar-fill {
   height: 100%;
-  background: #3b82f6;
-  border-radius: 3px;
-  transition: width 0.3s ease;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+
+  &.bar-critical {
+    background: linear-gradient(90deg, #dc2626, #ef4444);
+  }
+
+  &.bar-warning {
+    background: linear-gradient(90deg, #d97706, #f59e0b);
+  }
+
+  &.bar-attention {
+    background: linear-gradient(90deg, #ca8a04, #eab308);
+  }
+
+  &.bar-moderate {
+    background: linear-gradient(90deg, #059669, #10b981);
+  }
+
+  &.bar-info {
+    background: linear-gradient(90deg, #2563eb, #3b82f6);
+  }
+
+  &.bar-default {
+    background: linear-gradient(90deg, #6b7280, #9ca3af);
+  }
 }
 
-.analysis-percentage {
+.bar-percentage {
   font-size: 12px;
   font-weight: 600;
   color: #6b7280;
@@ -192,108 +272,288 @@
   text-align: right;
 }
 
-// Manufacturer Section - Fleet by Manufacturer
+.no-failures {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+
+  i {
+    font-size: 48px;
+    color: #10b981;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 4px 0;
+  }
+
+  .no-failures-desc {
+    font-size: 14px;
+    color: #6b7280;
+  }
+}
+
+// Manufacturer Section - Fleet Table
 .manufacturer-section {
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 24px;
+  padding: 20px;
+
+  .section-description {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 20px 0;
+    line-height: 1.4;
+  }
 }
 
-.manufacturer-grid {
+.fleet-table {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.table-header {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: 200px 140px 100px 120px 100px 160px;
+  background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+  border-bottom: none;
 }
 
-.manufacturer-item {
+.header-cell {
+  padding: 16px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f9fafb;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background: #f9fafb;
-  border: 1px solid #f3f4f6;
-  border-radius: 8px;
+  justify-content: center;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:first-child {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.table-body {
+  background: white;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 200px 140px 100px 120px 100px 160px;
+  border-bottom: 1px solid #f1f5f9;
   transition: all 0.2s ease;
 
   &:hover {
-    background: #f1f5f9;
-    border-color: #e2e8f0;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    transform: translateX(2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
 
-  .manufacturer-logo-container {
-    flex-shrink: 0;
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    background: white;
-    border: 1px solid #e2e8f0;
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:nth-child(even) {
+    background: #fafbfc;
+  }
+}
+
+.table-cell {
+  padding: 18px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #f1f5f9;
+  min-height: 70px;
+  transition: all 0.2s ease;
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+// Manufacturer column
+.manufacturer-col {
+  justify-content: flex-start;
+
+  .manufacturer-info {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 8px;
-
-    .manufacturer-logo-img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
+    gap: 14px;
   }
 
-  .truck-info {
-    flex: 1;
-    min-width: 0;
+  .manufacturer-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    padding: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
 
-    .truck-model {
-      font-size: 16px;
-      font-weight: 600;
-      color: #1e293b;
-      margin-bottom: 4px;
+  .manufacturer-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1f2937;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+}
+
+// Model column
+.model-col {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+
+  .model-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1.2;
+  }
+
+  .model-year {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+    background: #f3f4f6;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+}
+
+// Unit column
+.unit-col {
+  justify-content: center;
+
+  .unit-number {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1976d2;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #90caf9;
+    text-align: center;
+    min-width: 45px;
+  }
+
+  .no-unit {
+    font-size: 13px;
+    color: #9ca3af;
+    font-style: italic;
+  }
+}
+
+// Mileage column
+.mileage-col {
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-align: center;
+
+  .mileage-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1;
+  }
+
+  .mileage-unit {
+    font-size: 10px;
+    color: #6b7280;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+}
+
+// Hours column
+.hours-col {
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-align: center;
+
+  .hours-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1;
+  }
+
+  .hours-unit {
+    font-size: 10px;
+    color: #6b7280;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+}
+
+// Status column
+.status-col {
+  justify-content: center;
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid;
+    text-align: center;
+    min-width: 120px;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    &.status-good {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      color: #16a34a;
+      border-color: #bbf7d0;
     }
 
-    .truck-unit {
-      font-size: 12px;
-      font-weight: 600;
-      color: #1976d2;
-      background: #e3f2fd;
-      padding: 2px 8px;
-      border-radius: 4px;
-      display: inline-block;
-      margin-bottom: 8px;
+    &.status-minor {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #d97706;
+      border-color: #fcd34d;
     }
 
-    .truck-status {
-      font-size: 12px;
-      font-weight: 500;
-      padding: 4px 8px;
-      border-radius: 4px;
-      display: inline-block;
+    &.status-warning {
+      background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+      color: #ea580c;
+      border-color: #fb923c;
+    }
 
-      &.status-good {
-        background: #f0fdf4;
-        color: #16a34a;
-        border: 1px solid #bbf7d0;
-      }
+    &.status-critical {
+      background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+      color: #dc2626;
+      border-color: #f87171;
+    }
 
-      &.status-minor {
-        background: #fef3c7;
-        color: #d97706;
-        border: 1px solid #fcd34d;
-      }
-
-      &.status-warning {
-        background: #fff7ed;
-        color: #ea580c;
-        border: 1px solid #fb923c;
-      }
-
-      &.status-critical {
-        background: #fef2f2;
-        color: #dc2626;
-        border: 1px solid #f87171;
-      }
+    .status-icon {
+      font-size: 14px;
     }
   }
 }
@@ -303,7 +563,7 @@
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 24px;
+  padding: 20px;
 }
 
 .status-grid {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { Truck, FailureModule, VideoContent, DistanceUnit } from '../models/truck.model';
+import { ProjectService } from './project';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class TruckService {
   private trucks: Truck[] = [];
   private readonly STORAGE_KEY = 'truck_fleet_data';
 
-  constructor() {
+  constructor(private projectService: ProjectService) {
     this.loadTrucksFromStorage();
   }
 
@@ -51,10 +52,26 @@ export class TruckService {
   }
 
   getTrucks(): Observable<Truck[]> {
+    // If there's a current project, return only trucks from that project
+    const currentProject = this.projectService.getCurrentProject();
+
+    if (currentProject) {
+      const projectTrucks = this.projectService.getProjectTrucks();
+      return of(projectTrucks);
+    }
+    // Otherwise, return trucks from general storage
     return of(this.trucks);
   }
 
   getTruckByVin(vin: string): Observable<Truck | undefined> {
+    // If there's a current project, search only in project trucks
+    const currentProject = this.projectService.getCurrentProject();
+    if (currentProject) {
+      const projectTrucks = this.projectService.getProjectTrucks();
+      const truck = projectTrucks.find(t => t.vin === vin);
+      return of(truck);
+    }
+    // Otherwise, search in general storage
     const truck = this.trucks.find(t => t.vin === vin);
     return of(truck);
   }
@@ -63,62 +80,107 @@ export class TruckService {
     if (!searchTerm.trim()) {
       return this.getTrucks();
     }
-    
-    const filtered = this.trucks.filter(truck => 
+
+    // If there's a current project, search only in project trucks
+    const currentProject = this.projectService.getCurrentProject();
+    let trucksToSearch: Truck[];
+
+    if (currentProject) {
+      trucksToSearch = this.projectService.getProjectTrucks();
+    } else {
+      trucksToSearch = this.trucks;
+    }
+
+    const filtered = trucksToSearch.filter(truck =>
       truck.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
       truck.vin.toLowerCase().includes(searchTerm.toLowerCase()) ||
       truck.engineNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (truck.unitNumber && truck.unitNumber.toLowerCase().includes(searchTerm.toLowerCase()))
     );
-    
+
     return of(filtered);
   }
 
   addTruck(truck: Truck): Observable<Truck> {
-    // Check if VIN already exists
-    if (this.trucks.some(t => t.vin === truck.vin)) {
-      throw new Error('A truck with this VIN already exists');
-    }
-    
     // Ensure truck has a unique ID (use VIN as primary identifier)
     const truckWithId: Truck = {
       ...truck,
       id: truck.vin
     };
-    
-    this.trucks.push(truckWithId);
-    this.saveTrucksToStorage();
+
+    // Check for duplicate VIN in the appropriate context
+    const currentProject = this.projectService.getCurrentProject();
+    if (currentProject) {
+      const projectTrucks = this.projectService.getProjectTrucks();
+      if (projectTrucks.some(t => t.vin === truck.vin)) {
+        throw new Error('A truck with this VIN already exists in this project');
+      }
+      this.projectService.addTruckToCurrentProject(truckWithId);
+    } else {
+      if (this.trucks.some(t => t.vin === truck.vin)) {
+        throw new Error('A truck with this VIN already exists');
+      }
+      this.trucks.push(truckWithId);
+      this.saveTrucksToStorage();
+    }
+
+    // Notify all components that a truck was added
+    this.truckUpdated.next(truckWithId);
     return of(truckWithId);
   }
 
   updateTruck(vin: string, updatedTruck: Truck): Observable<Truck> {
-    const index = this.trucks.findIndex(t => t.vin === vin);
-    
-    if (index === -1) {
-      throw new Error('Truck not found');
+    const currentProject = this.projectService.getCurrentProject();
+
+    if (currentProject) {
+      const projectTrucks = this.projectService.getProjectTrucks();
+      const existingTrucks = projectTrucks.filter(t => t.vin !== vin);
+
+      // Check if new VIN conflicts with existing trucks (excluding current)
+      if (updatedTruck.vin !== vin && existingTrucks.some(t => t.vin === updatedTruck.vin)) {
+        throw new Error('A truck with this VIN already exists in this project');
+      }
+
+      this.projectService.updateTruckInCurrentProject(vin, updatedTruck);
+    } else {
+      const index = this.trucks.findIndex(t => t.vin === vin);
+
+      if (index === -1) {
+        throw new Error('Truck not found');
+      }
+
+      // Check if new VIN conflicts with existing trucks (excluding current)
+      if (updatedTruck.vin !== vin && this.trucks.some(t => t.vin === updatedTruck.vin)) {
+        throw new Error('A truck with this VIN already exists');
+      }
+
+      this.trucks[index] = updatedTruck;
+      this.saveTrucksToStorage();
     }
-    
-    // Check if new VIN conflicts with existing trucks (excluding current)
-    if (updatedTruck.vin !== vin && this.trucks.some(t => t.vin === updatedTruck.vin)) {
-      throw new Error('A truck with this VIN already exists');
-    }
-    
-    this.trucks[index] = updatedTruck;
-    this.saveTrucksToStorage();
+
     // Notify all components that this truck was updated
     this.truckUpdated.next(updatedTruck);
     return of(updatedTruck);
   }
 
   deleteTruck(vin: string): Observable<boolean> {
-    const index = this.trucks.findIndex(t => t.vin === vin);
-    
-    if (index === -1) {
-      throw new Error('Truck not found');
+    const currentProject = this.projectService.getCurrentProject();
+
+    if (currentProject) {
+      this.projectService.removeTruckFromCurrentProject(vin);
+    } else {
+      const index = this.trucks.findIndex(t => t.vin === vin);
+
+      if (index === -1) {
+        throw new Error('Truck not found');
+      }
+
+      this.trucks.splice(index, 1);
+      this.saveTrucksToStorage();
     }
-    
-    this.trucks.splice(index, 1);
-    this.saveTrucksToStorage();
+
+    // Notify all components that a truck was deleted
+    this.truckUpdated.next(null);
     return of(true);
   }
 

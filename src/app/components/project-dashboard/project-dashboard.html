@@ -1,0 +1,120 @@
+<div class="app-container">
+  <header class="header">
+    <div class="header-content">
+      <div class="brand-section">
+        <img src="Forza dorado tipo foil png.png" alt="Forza Logo" class="logo">
+        <h1 class="title">Workshop Dept. Fault Analysis System</h1>
+      </div>
+
+      <div class="header-actions animate-stagger" style="animation-delay: 0.3s">
+        <!-- Create New Project Button -->
+        <button (click)="showCreateProject = true" class="create-project-header-btn card-hover" title="Create New Project">
+          <mat-icon>add</mat-icon>
+          <span class="btn-text">Create New Project</span>
+        </button>
+
+        <!-- Sign Out Button -->
+        <button class="sign-out-btn card-hover" title="Sign Out">
+          <mat-icon>logout</mat-icon>
+          <span class="sign-out-text">Sign Out</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <div class="dashboard-container fade-in">
+      <div class="dashboard-content">
+
+        <!-- Projects Grid -->
+        <div class="projects-section animate-stagger" *ngIf="projects.length > 0" style="animation-delay: 0.2s">
+          <h3>Your Projects</h3>
+          <div class="projects-grid">
+            <div *ngFor="let project of projects; let i = index"
+                 class="project-card card-hover animate-stagger"
+                 [style.animation-delay]="(0.3 + i * 0.1) + 's'"
+                 (click)="openProject(project)">
+              <div class="project-header">
+                <h4>{{ project.title }}</h4>
+                <div class="project-actions">
+                  <button (click)="editProject(project, $event)" class="action-btn edit">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button (click)="deleteProject(project, $event)" class="action-btn delete">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="project-stats">
+                <div class="stat">
+                  <mat-icon>local_shipping</mat-icon>
+                  <span>{{ project.trucks.length }} Trucks</span>
+                </div>
+                <div class="stat">
+                  <mat-icon>bug_report</mat-icon>
+                  <span>{{ getTotalIssues(project) }} Issues</span>
+                </div>
+              </div>
+              <div class="project-date">
+                Created: {{ project.createdAt | date:'short' }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="projects.length === 0" class="empty-state">
+          <mat-icon>folder_open</mat-icon>
+          <h3>No Projects Yet</h3>
+          <p>Create your first project to start analyzing truck faults</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Project Modal -->
+  <div *ngIf="showCreateProject" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>{{ editingProject ? 'Edit Project' : 'Create New Project' }}</h2>
+        <button (click)="closeModal()" class="close-btn">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form (ngSubmit)="saveProject()" #projectForm="ngForm">
+          <div class="form-group">
+            <label for="title">Project Title</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              [(ngModel)]="projectData.title"
+              required
+              placeholder="Enter project title"
+              class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description (Optional)</label>
+            <textarea
+              id="description"
+              name="description"
+              [(ngModel)]="projectData.description"
+              placeholder="Enter project description"
+              class="form-control"
+              rows="3"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" (click)="closeModal()" class="btn btn-secondary">Cancel</button>
+            <button type="submit" [disabled]="!projectForm.form.valid" class="btn btn-primary">
+              {{ editingProject ? 'Update' : 'Create' }} Project
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

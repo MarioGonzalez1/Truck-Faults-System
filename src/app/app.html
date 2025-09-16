@@ -1,135 +1,168 @@
 <div class="app-container">
-  <header class="header">
-    <div class="header-content">
-      <div class="brand-section">
-        <img src="Forza dorado tipo foil png.png" alt="Forza Logo" class="logo">
-        <h1 class="title">Fault Analysis System</h1>
-      </div>
-
-      <div class="header-actions">
-        <!-- Settings Button -->
-        <button (click)="toggleSettingsPanel()" class="settings-btn" title="Fleet Settings">
-          <mat-icon>settings</mat-icon>
-        </button>
-
-        <!-- Search Section -->
-        <div class="header-search">
-          <div class="search-container">
-            <mat-icon class="search-icon">search</mat-icon>
-            <input
-              type="text"
-              placeholder="Search trucks..."
-              [(ngModel)]="searchTerm"
-              (input)="onSearch()"
-              class="search-input">
-            <button *ngIf="searchTerm" (click)="clearSearch()" class="clear-btn">
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
+  <!-- Full Interface for Project View -->
+  <div *ngIf="showFullInterface">
+    <header class="header">
+      <div class="header-content">
+        <div class="brand-section">
+          <img src="Forza dorado tipo foil png.png" alt="Forza Logo" class="logo">
+          <h1 class="title">{{ title }}</h1>
         </div>
 
-        <!-- Sign Out Button -->
-        <button class="sign-out-btn" title="Sign Out">
-          <mat-icon>logout</mat-icon>
-          <span class="sign-out-text">Sign Out</span>
-        </button>
-      </div>
-    </div>
-  </header>
+        <div class="header-actions">
+          <!-- Fleet Scorecard Button -->
+          <button (click)="goToDashboard()" class="dashboard-btn-header" title="Fleet Scorecard">
+            <mat-icon>dashboard</mat-icon>
+            <span class="btn-text">Fleet Scorecard</span>
+          </button>
 
-  <div class="sidebar-toggle-container" [class.sidebar-collapsed]="isCollapsed">
-    <button (click)="toggleSidebar()" class="sidebar-toggle" title="Toggle Sidebar">
-      <span class="toggle-icon">{{ isCollapsed ? '▶' : '◀' }}</span>
-    </button>
-  </div>
+          <!-- Back to Projects Button -->
+          <button (click)="goToProjects()" class="settings-btn" title="Back to Projects">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
 
-  <div class="main-layout">
-    <aside class="sidebar" [class.collapsed]="isCollapsed">
-      <div class="sidebar-content">
-        <app-truck-list [isCollapsed]="isCollapsed"></app-truck-list>
-      </div>
-      <div class="sidebar-footer">
-        <button (click)="goToDashboard()" class="dashboard-btn" title="Fleet Scorecard">
-          <mat-icon class="dashboard-icon">dashboard</mat-icon>
-          Fleet Scorecard
-        </button>
-      </div>
-    </aside>
-    
-    <main class="content">
-      <router-outlet></router-outlet>
-    </main>
-  </div>
+          <!-- Settings Button -->
+          <button (click)="toggleSettingsPanel()" class="settings-btn" title="Fleet Settings">
+            <mat-icon>settings</mat-icon>
+          </button>
 
-  <!-- Settings Panel -->
-  <div *ngIf="showSettingsPanel" class="settings-overlay">
-    <div class="settings-panel">
-      <div class="settings-header">
-        <h2>Fleet Settings</h2>
-        <button (click)="closeSettingsPanel()" class="close-btn">
-          <span class="close-icon">×</span>
-        </button>
-      </div>
-      
-      <div class="settings-content">
-        <!-- Add Truck Section -->
-        <div class="settings-section">
-          <h3>Add New Truck</h3>
-          <p class="section-description">Add a new truck to your fleet</p>
-          <button (click)="addTruck()" class="settings-action-btn primary">
-            <span class="btn-icon">+</span>
-            Add New Truck
+          <!-- Search Section -->
+          <div class="header-search">
+            <div class="search-container">
+              <mat-icon class="search-icon">search</mat-icon>
+              <input
+                type="text"
+                placeholder="Search trucks..."
+                [(ngModel)]="searchTerm"
+                (input)="onSearch()"
+                class="search-input">
+              <button *ngIf="searchTerm" (click)="clearSearch()" class="clear-btn">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Sign Out Button -->
+          <button class="sign-out-btn" title="Sign Out">
+            <mat-icon>logout</mat-icon>
+            <span class="sign-out-text">Sign Out</span>
           </button>
         </div>
-        
-        <!-- Manage Trucks Section -->
-        <div class="settings-section">
-          <h3>Manage Trucks</h3>
-          <p class="section-description">Edit or remove trucks from your fleet</p>
-          
-          <div class="truck-management-list">
-            <div *ngFor="let truck of trucks" class="management-item">
-              <div class="item-info">
-                <div class="item-header">
-                  <span class="truck-model">{{ truck.model }}</span>
-                  <span class="unit-number" *ngIf="truck.unitNumber">#{{ truck.unitNumber }}</span>
-                </div>
-                <div class="truck-vin">{{ truck.vin }}</div>
-                <div class="truck-metrics">
-                  <span class="metric">{{ getFormattedDistance(truck) }} {{ getDistanceUnit(truck) }}</span>
-                  <span class="metric">{{ truck.engineHours | number:'1.0-0' }} hrs</span>
-                  <span class="metric">{{ truck.failures.length }} issues</span>
-                </div>
-              </div>
-              <div class="item-actions">
-                <button (click)="editTruck(truck)" class="action-btn edit-btn">
-                  <mat-icon>edit</mat-icon>
-                  Edit
-                </button>
-                <button (click)="deleteTruck(truck)" class="action-btn delete-btn">
-                  <mat-icon>delete</mat-icon>
-                  Remove
+      </div>
+    </header>
+
+    <div class="sidebar-toggle-container" [class.sidebar-collapsed]="isCollapsed">
+      <button (click)="toggleSidebar()" class="sidebar-toggle" title="Toggle Sidebar">
+        <span class="toggle-icon">{{ isCollapsed ? '▶' : '◀' }}</span>
+      </button>
+    </div>
+
+    <div class="main-layout">
+      <aside class="sidebar" [class.collapsed]="isCollapsed">
+        <div class="sidebar-content">
+          <app-truck-list [isCollapsed]="isCollapsed" [projectId]="currentProject?.id"></app-truck-list>
+        </div>
+      </aside>
+
+      <main class="content">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+
+    <!-- Settings Panel -->
+    <div *ngIf="showSettingsPanel" class="settings-overlay">
+      <div class="settings-panel">
+        <div class="settings-header">
+          <h2>Fleet Settings</h2>
+          <button (click)="closeSettingsPanel()" class="close-btn">
+            <span class="close-icon">×</span>
+          </button>
+        </div>
+
+        <div class="settings-content">
+          <!-- Add Truck Section -->
+          <div class="settings-section">
+            <h3>Add New Truck</h3>
+            <p class="section-description">Add a new truck to your fleet</p>
+            <button (click)="addTruck()" class="settings-action-btn primary">
+              <span class="btn-icon">+</span>
+              Add New Truck
+            </button>
+          </div>
+
+          <!-- Manage Trucks Section -->
+          <div class="settings-section">
+            <h3>Manage Trucks</h3>
+            <p class="section-description">Edit or remove trucks from your fleet</p>
+
+            <!-- Search Section -->
+            <div class="manage-search-container">
+              <div class="search-field">
+                <mat-icon class="search-icon">search</mat-icon>
+                <input
+                  type="text"
+                  placeholder="Search by model, VIN, unit number..."
+                  [(ngModel)]="manageTruckSearchTerm"
+                  (input)="onManageTruckSearch()"
+                  class="search-input">
+                <button *ngIf="manageTruckSearchTerm" (click)="clearManageTruckSearch()" class="clear-search-btn">
+                  <mat-icon>close</mat-icon>
                 </button>
               </div>
             </div>
-            
-            <div *ngIf="trucks.length === 0" class="no-trucks">
-              <mat-icon>local_shipping</mat-icon>
-              <p>No trucks in fleet yet</p>
+
+            <div class="truck-management-list">
+              <div *ngFor="let truck of filteredTrucks" class="management-item">
+                <div class="item-info">
+                  <div class="item-header">
+                    <span class="truck-model">{{ truck.model }}</span>
+                    <span class="unit-number" *ngIf="truck.unitNumber">#{{ truck.unitNumber }}</span>
+                  </div>
+                  <div class="truck-vin">{{ truck.vin }}</div>
+                  <div class="truck-metrics">
+                    <span class="metric">{{ getFormattedDistance(truck) }} {{ getDistanceUnit(truck) }}</span>
+                    <span class="metric">{{ truck.engineHours | number:'1.0-0' }} hrs</span>
+                    <span class="metric">{{ truck.failures.length }} issues</span>
+                  </div>
+                </div>
+                <div class="item-actions">
+                  <button (click)="editTruck(truck)" class="action-btn edit-btn">
+                    <mat-icon>edit</mat-icon>
+                    Edit
+                  </button>
+                  <button (click)="deleteTruck(truck)" class="action-btn delete-btn">
+                    <mat-icon>delete</mat-icon>
+                    Remove
+                  </button>
+                </div>
+              </div>
+
+              <div *ngIf="filteredTrucks.length === 0 && trucks.length === 0" class="no-trucks">
+                <mat-icon>local_shipping</mat-icon>
+                <p>No trucks in fleet yet</p>
+              </div>
+              <div *ngIf="filteredTrucks.length === 0 && trucks.length > 0" class="no-results">
+                <mat-icon>search_off</mat-icon>
+                <p>No trucks match your search</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Truck Form Modal -->
+    <div *ngIf="showForm" class="form-overlay">
+      <app-truck-form
+        [truck]="editingTruck"
+        [isEdit]="isEditMode"
+        (save)="onSaveTruck($event)"
+        (cancel)="closeForm()">
+      </app-truck-form>
+    </div>
   </div>
 
-  <!-- Truck Form Modal -->
-  <div *ngIf="showForm" class="form-overlay">
-    <app-truck-form
-      [truck]="editingTruck"
-      [isEdit]="isEditMode"
-      (save)="onSaveTruck($event)"
-      (cancel)="closeForm()">
-    </app-truck-form>
+  <!-- Simple Router Outlet for Project Dashboard -->
+  <div *ngIf="!showFullInterface">
+    <router-outlet></router-outlet>
   </div>
 </div>

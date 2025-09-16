@@ -16,9 +16,9 @@
   </div>
 
   <!-- Main Content -->
-  <div *ngIf="!loading && truck && !isEditing" class="truck-content">
+  <div *ngIf="!loading && truck && !isEditing" class="truck-content fade-in">
     <!-- Truck Information Card -->
-    <mat-card class="info-card">
+    <mat-card class="info-card card-hover animate-stagger" style="animation-delay: 0.1s">
       <mat-card-header>
         <mat-card-title>
           Vehicle Information - {{ truck.model }}
@@ -62,8 +62,8 @@
             </div>
             <div class="info-content">
               <span class="info-label">Odometer Reading</span>
-              <span class="info-value">{{ truck.odometerReading | number:'1.0-0' }} km</span>
-              <span class="info-description">Total kilometers driven</span>
+              <span class="info-value">{{ getFormattedDistance() }} {{ getDistanceUnit() }}</span>
+              <span class="info-description">Total distance driven</span>
             </div>
           </div>
           <div class="info-item">
@@ -91,7 +91,7 @@
     </mat-card>
 
     <!-- Failures Section -->
-    <mat-card class="failures-card">
+    <mat-card class="failures-card card-hover animate-stagger" style="animation-delay: 0.2s">
       <mat-card-header>
         <mat-card-title>
           Failure Reports ({{ truck.failures.length }})
@@ -105,7 +105,7 @@
         </div>
 
         <mat-accordion *ngIf="truck.failures.length > 0">
-          <mat-expansion-panel *ngFor="let failure of truck.failures; let i = index" class="failure-panel">
+          <mat-expansion-panel *ngFor="let failure of truck.failures; let i = index" class="failure-panel" [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 <mat-icon class="failure-icon">error_outline</mat-icon>

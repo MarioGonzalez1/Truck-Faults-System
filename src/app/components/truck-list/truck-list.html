@@ -1,13 +1,14 @@
-<div class="sidebar-container">
+<div class="sidebar-container fade-in">
   <!-- Truck Cards List -->
   <div class="trucks-list">
     <div
-      *ngFor="let truck of filteredTrucks"
-      class="truck-card"
+      *ngFor="let truck of filteredTrucks; let i = index"
+      class="truck-card card-hover animate-stagger"
       [class.active]="isSelected(truck)"
       [class.has-critical]="getFailureSeverity(truck) === 'high'"
       [class.has-warning]="getFailureSeverity(truck) === 'medium'"
       [class.has-minor]="getFailureSeverity(truck) === 'low'"
+      [style.animation-delay]="(i * 0.05) + 's'"
       (click)="selectTruck(truck)">
 
       <!-- Unit Number Badge with Status -->

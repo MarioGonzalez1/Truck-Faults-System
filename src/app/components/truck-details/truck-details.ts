@@ -10,6 +10,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TruckService } from '../../services/truck';
+import { ProjectService } from '../../services/project';
 import { Truck, FailureModule, VideoContent, getManufacturerLogo, DistanceUnit } from '../../models/truck.model';
 import { TruckFormComponent } from '../truck-form/truck-form';
 
@@ -42,14 +43,19 @@ export class TruckDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private truckService: TruckService,
+    private projectService: ProjectService,
     private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
     // Listen to route parameter changes to handle navigation between different trucks
     this.route.paramMap.subscribe(params => {
+      const projectId = params.get('id');
       const vin = params.get('vin');
-      if (vin) {
+
+      if (projectId && vin) {
+        this.loadProjectAndTruck(projectId, vin);
+      } else if (vin) {
         this.loadTruck(vin);
       } else {
         this.router.navigate(['/']);
@@ -64,6 +70,19 @@ export class TruckDetailsComponent implements OnInit {
     });
   }
 
+  private loadProjectAndTruck(projectId: string, vin: string) {
+    // Load project from localStorage by ID
+    const savedProjects = localStorage.getItem('truck-fault-projects');
+    if (savedProjects) {
+      const projects = JSON.parse(savedProjects);
+      const currentProject = projects.find((p: any) => p.id === projectId);
+      if (currentProject) {
+        this.projectService.setCurrentProject(currentProject);
+        this.loadTruck(vin);
+      }
+    }
+  }
+
   loadTruck(vin: string) {
     this.loading = true;
     this.truckService.getTruckByVin(vin).subscribe(truck => {
@@ -75,12 +94,17 @@ export class TruckDetailsComponent implements OnInit {
           this.truckService.getTruckByVin(vin).subscribe(retryTruck => {
             if (retryTruck) {
               this.truck = retryTruck;
+              // Expand all failures by default when truck is loaded
+              this.expandAllFailures();
             } else {
               // Still not found, navigate back to home
               this.router.navigate(['/']);
             }
           });
         }, 200);
+      } else {
+        // Expand all failures by default when truck is loaded
+        this.expandAllFailures();
       }
     });
   }
@@ -95,6 +119,16 @@ export class TruckDetailsComponent implements OnInit {
 
   isFailureExpanded(failureId: string): boolean {
     return this.expandedFailures.has(failureId);
+  }
+
+  expandAllFailures() {
+    if (this.truck && this.truck.failures) {
+      this.truck.failures.forEach(failure => {
+        if (failure.id) {
+          this.expandedFailures.add(failure.id);
+        }
+      });
+    }
   }
 
   getSafeVideoUrl(url: string): SafeResourceUrl {

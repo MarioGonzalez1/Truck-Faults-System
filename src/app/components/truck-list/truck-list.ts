@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,21 +36,22 @@ import { TruckFormComponent } from '../truck-form/truck-form';
 })
 export class TruckListComponent implements OnInit {
   @Input() isCollapsed = false;
-  
+  @Input() projectId: string | null = null;
+
   trucks: Truck[] = [];
   filteredTrucks: Truck[] = [];
   searchTerm: string = '';
-  
+
   showForm = false;
   editingTruck: Truck | null = null;
   isEditMode = false;
   showSettingsPanel = false;
 
-  constructor(private truckService: TruckService, private router: Router) {}
+  constructor(private truckService: TruckService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.loadTrucks();
-    
+
     // Listen to search term changes from header
     this.truckService.searchTerm.subscribe(term => {
       this.searchTerm = term;
@@ -59,9 +60,8 @@ export class TruckListComponent implements OnInit {
 
     // Listen to truck updates to refresh list
     this.truckService.truckUpdated.subscribe(updatedTruck => {
-      if (updatedTruck) {
-        this.loadTrucks();
-      }
+      // Reload trucks for any change (add, update, delete)
+      this.loadTrucks();
     });
   }
 
@@ -105,10 +105,10 @@ export class TruckListComponent implements OnInit {
       try {
         this.truckService.deleteTruck(truck.vin).subscribe(() => {
           this.loadTrucks();
-          // Navigate to home if we deleted the currently viewed truck
+          // Navigate to project home if we deleted the currently viewed truck
           const currentPath = window.location.pathname;
-          if (currentPath.includes(truck.vin)) {
-            this.router.navigate(['/']);
+          if (currentPath.includes(truck.vin) && this.projectId) {
+            this.router.navigate(['/project', this.projectId]);
           }
         });
       } catch (error: any) {
@@ -125,10 +125,10 @@ export class TruckListComponent implements OnInit {
           this.loadTrucks();
           this.closeForm();
           // Navigate to updated truck if VIN changed
-          if (this.editingTruck!.vin !== truckData.vin) {
+          if (this.editingTruck!.vin !== truckData.vin && this.projectId) {
             const currentPath = window.location.pathname;
             if (currentPath.includes(this.editingTruck!.vin)) {
-              this.router.navigate(['/truck', truckData.vin]);
+              this.router.navigate(['/project', this.projectId, 'truck', truckData.vin]);
             }
           }
         });
@@ -138,9 +138,11 @@ export class TruckListComponent implements OnInit {
           this.loadTrucks();
           this.closeForm();
           // Small delay to ensure truck is saved before navigation
-          setTimeout(() => {
-            this.router.navigate(['/truck', truckData.vin]);
-          }, 100);
+          if (this.projectId) {
+            setTimeout(() => {
+              this.router.navigate(['/project', this.projectId, 'truck', truckData.vin]);
+            }, 100);
+          }
         });
       }
     } catch (error: any) {
@@ -189,15 +191,18 @@ export class TruckListComponent implements OnInit {
   }
 
   viewTruckDetails(truck: Truck) {
-    this.router.navigate(['/truck', truck.vin]);
+    if (this.projectId) {
+      this.router.navigate(['/project', this.projectId, 'truck', truck.vin]);
+    }
   }
 
   selectedTruckVin: string | null = null;
 
   selectTruck(truck: Truck) {
     this.selectedTruckVin = truck.vin;
-    // Use Angular Router for better navigation handling
-    this.router.navigate(['/truck', truck.vin]);
+    if (this.projectId) {
+      this.router.navigate(['/project', this.projectId, 'truck', truck.vin]);
+    }
   }
 
   isSelected(truck: Truck): boolean {

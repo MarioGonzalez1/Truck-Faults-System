@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { TruckService } from '../../services/truck';
+import { ProjectService } from '../../services/project';
 import { Truck, getManufacturerLogo } from '../../models/truck.model';
 
 interface FailureCategory {
@@ -27,9 +29,38 @@ export class HomeComponent implements OnInit {
   failureCategories: FailureCategory[] = [];
   trucks: Truck[] = [];
 
-  constructor(private truckService: TruckService) {}
+  constructor(
+    private truckService: TruckService,
+    private projectService: ProjectService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
+    // Get project ID from route and load project
+    this.route.params.subscribe(params => {
+      const projectId = params['id'];
+      if (projectId) {
+        this.loadProjectAndTrucks(projectId);
+      } else {
+        this.loadTrucks();
+      }
+    });
+  }
+
+  private loadProjectAndTrucks(projectId: string) {
+    // Load project from localStorage by ID
+    const savedProjects = localStorage.getItem('truck-fault-projects');
+    if (savedProjects) {
+      const projects = JSON.parse(savedProjects);
+      const currentProject = projects.find((p: any) => p.id === projectId);
+      if (currentProject) {
+        this.projectService.setCurrentProject(currentProject);
+        this.loadTrucks();
+      }
+    }
+  }
+
+  private loadTrucks() {
     this.truckService.getTrucks().subscribe(trucks => {
       this.trucks = trucks;
       this.calculateStats(trucks);
@@ -91,5 +122,42 @@ export class HomeComponent implements OnInit {
   // Get manufacturer logo path
   getManufacturerLogo(truck: Truck): string {
     return truck.manufacturer ? getManufacturerLogo(truck.manufacturer) : '';
+  }
+
+  // Get CSS class for failure category bars
+  getBarClass(categoryName: string): string {
+    switch (categoryName.toLowerCase()) {
+      case 'engine issues':
+        return 'bar-critical';
+      case 'brake system':
+        return 'bar-warning';
+      case 'transmission':
+        return 'bar-attention';
+      case 'exhaust system':
+        return 'bar-moderate';
+      case 'fuel system':
+        return 'bar-info';
+      default:
+        return 'bar-default';
+    }
+  }
+
+  // Track by function for performance
+  trackByVin(index: number, truck: Truck): string {
+    return truck.vin;
+  }
+
+  // Distance formatting methods
+  getFormattedDistance(truck: Truck): string {
+    const reading = truck.odometerReading;
+    if (reading >= 1000) {
+      return (reading / 1000).toFixed(1) + 'K';
+    }
+    return reading.toString();
+  }
+
+  getDistanceUnit(truck: Truck): string {
+    const unit = truck.odometerUnit || 'MILES';
+    return unit === 'MILES' ? 'mi' : 'km';
   }
 }
