@@ -18,7 +18,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  nodeVersion: '18.x'
+  nodeVersion: '20.x'
   buildConfiguration: 'production'
   artifactName: 'truck-faults-app'
 
@@ -53,7 +53,7 @@ stages:
 
           - script: |
               echo "Building Angular application..."
-              npm run build --configuration=$(buildConfiguration)
+              npm run build -- --configuration=$(buildConfiguration)
             displayName: 'Build Angular Application'
 
           - script: |
