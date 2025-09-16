@@ -1,0 +1,84 @@
+# Azure DevOps Pipeline for Truck Faults System
+# Simple build pipeline that compiles Angular and creates artifact
+
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+      - feature/*
+
+pr:
+  branches:
+    include:
+      - main
+      - develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  nodeVersion: '18.x'
+  buildConfiguration: 'production'
+  artifactName: 'truck-faults-app'
+
+stages:
+  - stage: Build
+    displayName: 'Build and Create Artifact'
+    jobs:
+      - job: BuildJob
+        displayName: 'Build Angular Application'
+        steps:
+          - checkout: self
+            displayName: 'Checkout source code'
+
+          - task: NodeTool@0
+            displayName: 'Install Node.js $(nodeVersion)'
+            inputs:
+              versionSpec: '$(nodeVersion)'
+
+          - task: Cache@2
+            displayName: 'Cache node_modules'
+            inputs:
+              key: 'npm | "$(Agent.OS)" | package-lock.json'
+              restoreKeys: |
+                npm | "$(Agent.OS)"
+                npm
+              path: '$(System.DefaultWorkingDirectory)/node_modules'
+
+          - script: |
+              echo "Installing dependencies..."
+              npm ci
+            displayName: 'Install Dependencies'
+
+          - script: |
+              echo "Building Angular application..."
+              npm run build --configuration=$(buildConfiguration)
+            displayName: 'Build Angular Application'
+
+          - script: |
+              echo "Preparing deployment artifact..."
+
+              # Create artifact directory
+              mkdir -p $(Build.ArtifactStagingDirectory)/release
+
+              # Copy built application
+              cp -r dist/truck-faults-system/* $(Build.ArtifactStagingDirectory)/release/
+
+              # Create deployment info
+              echo "Build: $(Build.BuildNumber)" > $(Build.ArtifactStagingDirectory)/release/build-info.txt
+              echo "Date: $(date)" >> $(Build.ArtifactStagingDirectory)/release/build-info.txt
+              echo "Commit: $(Build.SourceVersion)" >> $(Build.ArtifactStagingDirectory)/release/build-info.txt
+              echo "Branch: $(Build.SourceBranchName)" >> $(Build.ArtifactStagingDirectory)/release/build-info.txt
+
+              # List contents for verification
+              echo "Artifact contents:"
+              ls -la $(Build.ArtifactStagingDirectory)/release/
+            displayName: 'Prepare Artifact'
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Build Artifact'
+            inputs:
+              pathToPublish: '$(Build.ArtifactStagingDirectory)/release'
+              artifactName: '$(artifactName)'
+              publishLocation: 'Container'

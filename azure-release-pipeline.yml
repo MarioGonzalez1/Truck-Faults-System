@@ -1,0 +1,98 @@
+# Azure DevOps Release Pipeline for Truck Faults System
+# Simple release pipeline for deploying the application
+
+trigger: none  # This pipeline is triggered by the build pipeline
+
+resources:
+  pipelines:
+    - pipeline: buildPipeline
+      source: 'Truck-Faults-System-CI'  # Name of your build pipeline
+      trigger:
+        branches:
+          include:
+            - main
+
+variables:
+  - name: 'applicationName'
+    value: 'truck-faults-system'
+
+stages:
+  # Development Environment
+  - stage: DeployDev
+    displayName: 'Deploy to Development'
+    variables:
+      - name: 'environmentName'
+        value: 'Development'
+    jobs:
+      - deployment: DeployToDev
+        displayName: 'Deploy to Development Environment'
+        environment: 'Development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: none
+
+                - download: buildPipeline
+                  artifact: 'truck-faults-app'
+                  displayName: 'Download Build Artifact'
+
+                - script: |
+                    echo "Deployment artifact contents:"
+                    ls -la $(Pipeline.Workspace)/buildPipeline/truck-faults-app/
+
+                    echo "Artifact ready for deployment!"
+                    echo "Files can be copied to web server from:"
+                    echo "$(Pipeline.Workspace)/buildPipeline/truck-faults-app/"
+                  displayName: 'Verify Artifact'
+
+                # Replace this with your actual deployment steps
+                # For example, copy to web server, FTP upload, etc.
+                - script: |
+                    echo "=== DEPLOYMENT INSTRUCTIONS ==="
+                    echo "1. Download the artifact from this pipeline run"
+                    echo "2. Extract all files to your web server directory"
+                    echo "3. Configure your web server to serve index.html for all routes"
+                    echo "4. Ensure MIME types are configured for .js, .css, .html files"
+                    echo "================================"
+                  displayName: 'Deployment Instructions'
+
+  # Production Environment (if needed)
+  - stage: DeployProduction
+    displayName: 'Deploy to Production'
+    dependsOn: DeployDev
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    variables:
+      - name: 'environmentName'
+        value: 'Production'
+    jobs:
+      - deployment: DeployToProduction
+        displayName: 'Deploy to Production Environment'
+        environment: 'Production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: none
+
+                - download: buildPipeline
+                  artifact: 'truck-faults-app'
+                  displayName: 'Download Build Artifact'
+
+                - script: |
+                    echo "Production deployment artifact ready!"
+                    echo "Artifact location: $(Pipeline.Workspace)/buildPipeline/truck-faults-app/"
+
+                    # Add your production deployment steps here
+                    # Examples:
+                    # - Copy to production server via SSH/SCP
+                    # - Upload to FTP server
+                    # - Deploy to IIS
+                    # - Upload to static hosting service
+
+                    echo "Remember to:"
+                    echo "- Configure web server for SPA routing"
+                    echo "- Set proper MIME types"
+                    echo "- Enable GZIP compression"
+                    echo "- Configure HTTPS"
+                  displayName: 'Production Deployment'
