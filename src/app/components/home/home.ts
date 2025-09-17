@@ -90,22 +90,24 @@ export class HomeComponent implements OnInit {
 
   private categorizeFailures(trucks: Truck[]) {
     const categories: { [key: string]: number } = {};
-    
+
     trucks.forEach(truck => {
       truck.failures.forEach(failure => {
         const title = failure.title.toLowerCase();
-        if (title.includes('engine') || title.includes('overheating')) {
+        if (title.includes('engine') || title.includes('overheating') || title.includes('camshaft')) {
           categories['Engine Issues'] = (categories['Engine Issues'] || 0) + 1;
         } else if (title.includes('brake')) {
           categories['Brake System'] = (categories['Brake System'] || 0) + 1;
-        } else if (title.includes('transmission') || title.includes('fluid')) {
+        } else if (title.includes('transmission') || title.includes('fluid') || title.includes('mainshaft') || title.includes('seal')) {
           categories['Transmission'] = (categories['Transmission'] || 0) + 1;
         } else if (title.includes('exhaust') || title.includes('dpf')) {
           categories['Exhaust System'] = (categories['Exhaust System'] || 0) + 1;
         } else if (title.includes('fuel') || title.includes('injector')) {
           categories['Fuel System'] = (categories['Fuel System'] || 0) + 1;
         } else {
-          categories['Other'] = (categories['Other'] || 0) + 1;
+          // Use the actual failure title instead of "Other"
+          const categoryName = failure.title;
+          categories[categoryName] = (categories[categoryName] || 0) + 1;
         }
       });
     });
