@@ -1350,6 +1350,15 @@
                 "description": "",
                 "uploadDate": "2025-09-17T21:19:47.856Z",
                 "fileSize": 6647519
+            },
+            {
+                "id": "1758144510459yc0krnfov",
+                "type": "video",
+                "filename": "TransmissionProblem23.mp4",
+                "url": "blob:https://truck-fault-system.forzacore.app/c59688b1-b13e-4372-b98f-0705638c71a8",
+                "description": "",
+                "uploadDate": "2025-09-17T21:28:30.459Z",
+                "fileSize": 14017186
             }
         ],
         "severity": "critical",
