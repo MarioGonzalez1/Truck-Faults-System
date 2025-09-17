@@ -60,11 +60,16 @@
               <div class="project-main-info">
                 <div class="project-header">
                   <div class="project-title-section">
-                    <mat-icon class="project-icon">settings</mat-icon>
+                    <mat-icon class="project-icon">
+                      {{ project.type === 'general-problem' ? 'description' : 'settings' }}
+                    </mat-icon>
                     <h4>{{ project.title }}</h4>
+                    <span class="project-type-badge" [class]="project.type === 'general-problem' ? 'general-badge' : 'fleet-badge'">
+                      {{ project.type === 'general-problem' ? 'Problem Report' : 'Fleet Analysis' }}
+                    </span>
                   </div>
                 </div>
-                <div class="project-stats">
+                <div class="project-stats" *ngIf="project.type !== 'general-problem'">
                   <div class="stat">
                     <mat-icon>local_shipping</mat-icon>
                     <span>{{ project.trucks.length }} Trucks</span>
@@ -72,6 +77,16 @@
                   <div class="stat">
                     <mat-icon>bug_report</mat-icon>
                     <span>{{ getTotalIssues(project) }} Issues</span>
+                  </div>
+                </div>
+                <div class="project-stats" *ngIf="project.type === 'general-problem'">
+                  <div class="stat">
+                    <mat-icon>report_problem</mat-icon>
+                    <span>General Problem</span>
+                  </div>
+                  <div class="stat">
+                    <mat-icon>photo_library</mat-icon>
+                    <span>Media Report</span>
                   </div>
                 </div>
               </div>
@@ -123,6 +138,23 @@
 
       <div class="modal-body">
         <form (ngSubmit)="saveProject()" #projectForm="ngForm">
+          <!-- Project Type Selector -->
+          <div class="form-group" *ngIf="!editingProject">
+            <label for="type">Project Type</label>
+            <select
+              id="type"
+              name="type"
+              [(ngModel)]="projectData.type"
+              required
+              class="form-control">
+              <option value="truck-fleet">Truck Fleet Analysis</option>
+              <option value="general-problem">General Problem Report</option>
+            </select>
+            <small class="form-text">
+              Choose "General Problem Report" for simple problem descriptions with media
+            </small>
+          </div>
+
           <div class="form-group">
             <label for="title">Project Title</label>
             <input
@@ -136,14 +168,17 @@
           </div>
 
           <div class="form-group">
-            <label for="description">Description (Optional)</label>
+            <label for="description">
+              {{ projectData.type === 'general-problem' ? 'Problem Description' : 'Description (Optional)' }}
+            </label>
             <textarea
               id="description"
               name="description"
               [(ngModel)]="projectData.description"
-              placeholder="Enter project description"
+              [placeholder]="projectData.type === 'general-problem' ? 'Describe the problem in detail...' : 'Enter project description'"
               class="form-control"
-              rows="3"></textarea>
+              [rows]="projectData.type === 'general-problem' ? 6 : 3"
+              [required]="projectData.type === 'general-problem'"></textarea>
           </div>
 
           <div class="form-actions">

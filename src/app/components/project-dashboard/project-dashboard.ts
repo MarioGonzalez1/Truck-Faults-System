@@ -6,12 +6,34 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClient } from '@angular/common/http';
 import { ProjectService } from '../../services/project';
 
+export type ProjectType = 'truck-fleet' | 'general-problem';
+
 export interface Project {
   id: string;
   title: string;
   description?: string;
   createdAt: Date;
+  type: ProjectType;
   trucks: any[];
+}
+
+export interface MediaItem {
+  id: string;
+  type: 'image' | 'video';
+  filename: string;
+  url: string;
+  description?: string;
+  uploadDate: Date;
+  fileSize?: number;
+}
+
+export interface GeneralProblemProject extends Project {
+  type: 'general-problem';
+  problemDescription: string;
+  mediaContent: MediaItem[];
+  severity?: 'low' | 'medium' | 'high' | 'critical';
+  status?: 'open' | 'investigating' | 'resolved';
+  tags?: string[];
 }
 
 @Component({
@@ -29,7 +51,8 @@ export class ProjectDashboardComponent implements OnInit {
   editingProject: Project | null = null;
   projectData = {
     title: '',
-    description: ''
+    description: '',
+    type: 'truck-fleet' as ProjectType
   };
 
   constructor(private router: Router, private projectService: ProjectService, private http: HttpClient) {}
@@ -44,8 +67,12 @@ export class ProjectDashboardComponent implements OnInit {
     if (savedProjects) {
       this.projects = JSON.parse(savedProjects).map((p: any) => ({
         ...p,
-        createdAt: new Date(p.createdAt)
+        createdAt: new Date(p.createdAt),
+        // Migrate legacy projects without type to truck-fleet
+        type: p.type || 'truck-fleet'
       }));
+      // Save migrated projects back to localStorage
+      this.saveProjects();
       this.filterProjects();
     } else {
       // If no projects in localStorage, try to load from fallback JSON file
@@ -57,10 +84,11 @@ export class ProjectDashboardComponent implements OnInit {
     this.http.get<Project[]>('/assets/Truck-fault-project.json').subscribe({
       next: (projects) => {
         if (projects && projects.length > 0) {
-          // Convert date strings to Date objects
+          // Convert date strings to Date objects and add type field
           this.projects = projects.map((p: any) => ({
             ...p,
-            createdAt: new Date(p.createdAt)
+            createdAt: new Date(p.createdAt),
+            type: p.type || 'truck-fleet'
           }));
           // Save the fallback projects to localStorage
           this.saveProjects();
@@ -89,19 +117,39 @@ export class ProjectDashboardComponent implements OnInit {
         this.projects[index] = {
           ...this.projects[index],
           title: this.projectData.title,
-          description: this.projectData.description
+          description: this.projectData.description,
+          type: this.projectData.type
         };
       }
     } else {
-      // Create new project
-      const newProject: Project = {
-        id: Date.now().toString(),
-        title: this.projectData.title,
-        description: this.projectData.description,
-        createdAt: new Date(),
-        trucks: []
-      };
-      this.projects.push(newProject);
+      // Create new project based on type
+      if (this.projectData.type === 'general-problem') {
+        const newProject: GeneralProblemProject = {
+          id: Date.now().toString(),
+          title: this.projectData.title,
+          description: this.projectData.description,
+          type: 'general-problem',
+          createdAt: new Date(),
+          trucks: [], // Keep for compatibility
+          problemDescription: this.projectData.description || '',
+          mediaContent: [],
+          severity: 'medium',
+          status: 'open',
+          tags: []
+        };
+        this.projects.push(newProject);
+      } else {
+        // Regular truck fleet project
+        const newProject: Project = {
+          id: Date.now().toString(),
+          title: this.projectData.title,
+          description: this.projectData.description,
+          type: 'truck-fleet',
+          createdAt: new Date(),
+          trucks: []
+        };
+        this.projects.push(newProject);
+      }
     }
 
     this.saveProjects();
@@ -112,8 +160,14 @@ export class ProjectDashboardComponent implements OnInit {
   openProject(project: Project) {
     // Set the current project in the service (this will trigger updates)
     this.projectService.setCurrentProject(project);
-    // Navigate to the truck fault analysis system
-    this.router.navigate(['/project', project.id]);
+
+    // Navigate based on project type
+    if (project.type === 'general-problem') {
+      this.router.navigate(['/general-problem', project.id]);
+    } else {
+      // Navigate to the truck fault analysis system
+      this.router.navigate(['/project', project.id]);
+    }
   }
 
   editProject(project: Project, event: Event) {
@@ -121,7 +175,8 @@ export class ProjectDashboardComponent implements OnInit {
     this.editingProject = project;
     this.projectData = {
       title: project.title,
-      description: project.description || ''
+      description: project.description || '',
+      type: project.type || 'truck-fleet'
     };
     this.showCreateProject = true;
   }
@@ -141,7 +196,8 @@ export class ProjectDashboardComponent implements OnInit {
     this.editingProject = null;
     this.projectData = {
       title: '',
-      description: ''
+      description: '',
+      type: 'truck-fleet'
     };
   }
 

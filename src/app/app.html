@@ -9,24 +9,25 @@
         </div>
 
         <div class="header-actions">
-          <!-- Fleet Scorecard Button -->
-          <button (click)="goToDashboard()" class="dashboard-btn-header" title="Fleet Scorecard">
+          <!-- Fleet Scorecard Button (only for truck fleet projects) -->
+          <button *ngIf="!isGeneralProblemView" (click)="goToDashboard()" class="dashboard-btn-header" title="Fleet Scorecard">
             <mat-icon>dashboard</mat-icon>
             <span class="btn-text">Fleet Scorecard</span>
           </button>
 
           <!-- Back to Projects Button -->
-          <button (click)="goToProjects()" class="settings-btn" title="Back to Projects">
+          <button (click)="goToProjects()" class="back-to-projects-btn" title="Back to Projects">
             <mat-icon>arrow_back</mat-icon>
+            <span class="btn-text">Back to Projects</span>
           </button>
 
-          <!-- Settings Button -->
-          <button (click)="toggleSettingsPanel()" class="settings-btn" title="Fleet Settings">
+          <!-- Settings Button (only for truck fleet projects) -->
+          <button *ngIf="!isGeneralProblemView" (click)="toggleSettingsPanel()" class="settings-btn" title="Fleet Settings">
             <mat-icon>settings</mat-icon>
           </button>
 
-          <!-- Search Section -->
-          <div class="header-search">
+          <!-- Search Section (only for truck fleet projects) -->
+          <div *ngIf="!isGeneralProblemView" class="header-search">
             <div class="search-container">
               <mat-icon class="search-icon">search</mat-icon>
               <input
@@ -50,20 +51,21 @@
       </div>
     </header>
 
-    <div class="sidebar-toggle-container" [class.sidebar-collapsed]="isCollapsed">
+    <!-- Sidebar for Truck Fleet Projects Only -->
+    <div *ngIf="!isGeneralProblemView" class="sidebar-toggle-container" [class.sidebar-collapsed]="isCollapsed">
       <button (click)="toggleSidebar()" class="sidebar-toggle" title="Toggle Sidebar">
         <span class="toggle-icon">{{ isCollapsed ? '▶' : '◀' }}</span>
       </button>
     </div>
 
-    <div class="main-layout">
-      <aside class="sidebar" [class.collapsed]="isCollapsed">
+    <div class="main-layout" [class.no-sidebar]="isGeneralProblemView">
+      <aside *ngIf="!isGeneralProblemView" class="sidebar" [class.collapsed]="isCollapsed">
         <div class="sidebar-content">
           <app-truck-list [isCollapsed]="isCollapsed" [projectId]="currentProject?.id"></app-truck-list>
         </div>
       </aside>
 
-      <main class="content">
+      <main class="content" [class.full-width]="isGeneralProblemView">
         <router-outlet></router-outlet>
       </main>
     </div>

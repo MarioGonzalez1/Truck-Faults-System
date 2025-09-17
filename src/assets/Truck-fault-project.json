@@ -521,11 +521,12 @@
                 "manufacturer": "KENWORTH",
                 "id": "1XKYD49X6RJ357368"
             }
-        ]
+        ],
+        "type": "truck-fleet"
     },
     {
         "id": "1758067632233",
-        "title": "Rear Mainshaft Seal Fault Analysis",
+        "title": "T680 - Rear Mainshaft Seal Fault Analysis",
         "description": "REAR MAINSHAFT SEAL",
         "createdAt": "2025-09-17T00:07:12.233Z",
         "trucks": [
@@ -1149,6 +1150,210 @@
                 "manufacturer": "KENWORTH",
                 "id": "1XKYD49X4SJ158471"
             }
-        ]
+        ],
+        "type": "truck-fleet"
+    },
+    {
+        "id": "1758077083364",
+        "title": "Transmission Problem",
+        "description": "Transmission Problem",
+        "type": "general-problem",
+        "createdAt": "2025-09-17T02:44:43.364Z",
+        "trucks": [],
+        "problemDescription": "During the inspection of the transmission and its electronic control module (TCM/ECU), several problems were identified:\n\t1.\tElectronic Module Corrosion and Damage\n\t•\tRust and moisture were found around the module’s mounting bolts, indicating water intrusion.\n\t•\tA black burnt spot on the circuit board suggests possible overheating or a short circuit, which can cause intermittent electrical failures or loss of communication between the TCM and the transmission.\n\t2.\tInternal Transmission Wear\n\t•\tInside the transmission housing there is a heavy reddish-brown dust, which is a mixture of burned oil and friction material from the clutch packs.\n\t•\tThis points to prolonged clutch wear and possible overheating, which can lead to slipping gears, harsh shifting, or hydraulic pressure loss.\n\t3.\tHydraulic Rail “B” Concerns\n\t•\tThe “rail B” is the hydraulic control assembly responsible for directing fluid pressure to the correct clutches during gear changes.\n\t•\tIf the electronic module fails to send accurate signals, or if contamination from friction material blocks the passages, the rail B cannot operate correctly—causing delayed or erratic shifting.",
+        "mediaContent": [
+            {
+                "id": "1758078802424phubpu0j6",
+                "type": "video",
+                "filename": "TransmisionProblem21.mp4",
+                "url": "./assets/TransmisionProblem21.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.424Z",
+                "fileSize": 74477683
+            },
+            {
+                "id": "1758078802425ptc1pk9dq",
+                "type": "video",
+                "filename": "TransmisionProblem20.mp4",
+                "url": "./assets/TransmisionProblem20.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.425Z",
+                "fileSize": 18168081
+            },
+            {
+                "id": "1758078802425bjb5xm5zn",
+                "type": "video",
+                "filename": "TransmisionProblem19.mp4",
+                "url": "./assets/TransmisionProblem19.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.425Z",
+                "fileSize": 8249627
+            },
+            {
+                "id": "1758078802426mckyz6z3j",
+                "type": "video",
+                "filename": "TransmisionProblem18.mp4",
+                "url": "./assets/TransmisionProblem18.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.426Z",
+                "fileSize": 16617434
+            },
+            {
+                "id": "1758078802426orr3zxrap",
+                "type": "video",
+                "filename": "TransmisionProblem17.mp4",
+                "url": "./assets/TransmisionProblem17.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.426Z",
+                "fileSize": 7998122
+            },
+            {
+                "id": "1758078802426gcc221t0v",
+                "type": "video",
+                "filename": "TransmisionProblem16.mp4",
+                "url": "./assets/TransmisionProblem16.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.427Z",
+                "fileSize": 9294288
+            },
+            {
+                "id": "1758078802427iffw0yjpx",
+                "type": "image",
+                "filename": "TransmisionProblem15.jpeg",
+                "url": "./assets/TransmisionProblem15.jpeg",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.427Z",
+                "fileSize": 227914
+            },
+            {
+                "id": "17580788024271dp58tbsw",
+                "type": "video",
+                "filename": "TransmisionProblem14.mp4",
+                "url": "./assets/TransmisionProblem14.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.428Z",
+                "fileSize": 1102508
+            },
+            {
+                "id": "1758078802428e76m74i1j",
+                "type": "image",
+                "filename": "TransmisionProblem13.jpeg",
+                "url": "./assets/TransmisionProblem13.jpeg",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.428Z",
+                "fileSize": 406042
+            },
+            {
+                "id": "1758078802428nmufgijus",
+                "type": "video",
+                "filename": "TransmisionProblem12.mp4",
+                "url": "./assets/TransmisionProblem12.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.428Z",
+                "fileSize": 4051812
+            },
+            {
+                "id": "1758078802428w0eb4n9cs",
+                "type": "video",
+                "filename": "TransmisionProblem11.mp4",
+                "url": "./assets/TransmisionProblem11.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.428Z",
+                "fileSize": 15403070
+            },
+            {
+                "id": "1758078802429hml8n2wgh",
+                "type": "video",
+                "filename": "TransmisionProblem10.mp4",
+                "url": "./assets/TransmisionProblem10.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.429Z",
+                "fileSize": 3151851
+            },
+            {
+                "id": "175807880242960cwlj8xd",
+                "type": "video",
+                "filename": "TransmisionProblem9.mp4",
+                "url": "./assets/TransmisionProblem9.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.429Z",
+                "fileSize": 11014154
+            },
+            {
+                "id": "175807880242909x5rownz",
+                "type": "video",
+                "filename": "TransmisionProblem8.mp4",
+                "url": "./assets/TransmisionProblem8.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.429Z",
+                "fileSize": 41787635
+            },
+            {
+                "id": "17580788024305rrqpexhu",
+                "type": "video",
+                "filename": "TransmisionProblem7.mp4",
+                "url": "./assets/TransmisionProblem7.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.430Z",
+                "fileSize": 38212340
+            },
+            {
+                "id": "1758078802430klj327jzc",
+                "type": "video",
+                "filename": "TransmisionProblem6.mp4",
+                "url": "./assets/TransmisionProblem6.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.430Z",
+                "fileSize": 14878122
+            },
+            {
+                "id": "1758078802430aj3zy275c",
+                "type": "video",
+                "filename": "TransmisionProblem5.mp4",
+                "url": "./assets/TransmisionProblem5.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.430Z",
+                "fileSize": 19242903
+            },
+            {
+                "id": "1758078802430bhgz38z8z",
+                "type": "video",
+                "filename": "TransmisionProblem4.mp4",
+                "url": "./assets/TransmisionProblem4.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.431Z",
+                "fileSize": 15607958
+            },
+            {
+                "id": "1758078802431ojkup0k2u",
+                "type": "video",
+                "filename": "TransmisionProblem3.mp4",
+                "url": "./assets/TransmisionProblem3.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.431Z",
+                "fileSize": 7702047
+            },
+            {
+                "id": "17580788024312nxotg0yp",
+                "type": "video",
+                "filename": "TransmisionProblem2.mp4",
+                "url": "./assets/TransmisionProblem2.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.431Z",
+                "fileSize": 16257291
+            },
+            {
+                "id": "1758078802431l2x4kfpag",
+                "type": "video",
+                "filename": "TransmisionProblem1.mp4",
+                "url": "./assets/TransmisionProblem1.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.431Z",
+                "fileSize": 10851835
+            }
+        ],
+        "severity": "critical",
+        "status": "open",
+        "tags": []
     }
 ]
