@@ -876,3 +876,121 @@
   z-index: 1100;
   padding: 20px;
 }
+
+// =======================================
+// GLOBAL PROFESSIONAL TRANSITION SYSTEM
+// =======================================
+
+// Router outlet transition container
+router-outlet + * {
+  animation: routeTransition 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+}
+
+// Global page entrance animation
+.app-container {
+  animation: pageEntrance 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+}
+
+// Enhanced header animations
+.header {
+  animation: headerSlideIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+  animation-delay: 0.1s;
+}
+
+// Main layout transition improvements
+.main-layout {
+  animation: layoutFadeIn 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+  animation-delay: 0.2s;
+}
+
+// Content area professional entrance
+.content {
+  animation: contentSlideUp 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+  animation-delay: 0.3s;
+}
+
+// Professional keyframe animations
+@keyframes routeTransition {
+  from {
+    opacity: 0;
+    transform: translateX(30px) scale(0.98);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes pageEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(20px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes headerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes layoutFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes contentSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Loading states with smooth transitions
+.loading-spinner {
+  animation: smoothPulse 0.3s ease-in-out both;
+}
+
+@keyframes smoothPulse {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Enhanced button hover transitions (removed click scale effect)
+button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}

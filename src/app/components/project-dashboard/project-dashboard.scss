@@ -741,3 +741,78 @@
   margin-top: 4px;
   font-style: italic;
 }
+
+// ==============================
+// PROFESSIONAL TRANSITION SYSTEM
+// ==============================
+
+// Project card hover animation (removed click effects)
+.project-card {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  }
+}
+
+// Dashboard exit transition
+.dashboard-container {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform-origin: center;
+
+  &.project-transition-exit {
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+    filter: blur(2px);
+  }
+}
+
+// Enhanced project card animation sequence
+.project-card.card-hover:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 16px 32px rgba(0, 0, 0, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+
+  .project-icon {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+  }
+
+  .project-title-section h4 {
+    color: #3b82f6;
+    transition: color 0.2s ease;
+  }
+}
+
+// Staggered animation improvements
+.animate-stagger {
+  animation: slideInUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Click ripple effect - REMOVED per user request
+
+// Loading state for smooth transitions
+.projects-grid {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+
+  &.transitioning {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+}

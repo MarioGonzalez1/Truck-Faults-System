@@ -158,15 +158,35 @@ export class ProjectDashboardComponent implements OnInit {
   }
 
   openProject(project: Project) {
-    // Set the current project in the service (this will trigger updates)
-    this.projectService.setCurrentProject(project);
+    // Add professional transition effect
+    const dashboardContainer = document.querySelector('.dashboard-container');
 
-    // Navigate based on project type
-    if (project.type === 'general-problem') {
-      this.router.navigate(['/general-problem', project.id]);
+    if (dashboardContainer) {
+      // Add exit animation class
+      dashboardContainer.classList.add('project-transition-exit');
+
+      // Wait for exit animation to complete
+      setTimeout(() => {
+        // Set the current project in the service (this will trigger updates)
+        this.projectService.setCurrentProject(project);
+
+        // Navigate based on project type
+        if (project.type === 'general-problem') {
+          this.router.navigate(['/general-problem', project.id]);
+        } else {
+          // Navigate to the truck fault analysis system
+          this.router.navigate(['/project', project.id]);
+        }
+      }, 300); // Match the CSS animation duration
     } else {
-      // Navigate to the truck fault analysis system
-      this.router.navigate(['/project', project.id]);
+      // Fallback: immediate navigation if container not found
+      this.projectService.setCurrentProject(project);
+
+      if (project.type === 'general-problem') {
+        this.router.navigate(['/general-problem', project.id]);
+      } else {
+        this.router.navigate(['/project', project.id]);
+      }
     }
   }
 
