@@ -59,7 +59,13 @@ export class TruckFormComponent implements OnInit {
 
   ngOnInit() {
     if (this.truck && this.isEdit) {
-      this.formData = { ...this.truck, failures: [...this.truck.failures] };
+      console.log('truck-form ngOnInit - Original truck videos:', this.truck.failures?.[0]?.videoContent?.length || 0);
+
+      // Create a true deep copy to completely isolate from the original truck object
+      this.formData = this.deepCopyTruck(this.truck);
+
+      console.log('truck-form ngOnInit - Form data videos:', this.formData.failures?.[0]?.videoContent?.length || 0);
+
       // Set available models based on existing manufacturer
       if (this.formData.manufacturer) {
         this.availableModels = getModelsForManufacturer(this.formData.manufacturer as TruckManufacturer);
@@ -70,6 +76,40 @@ export class TruckFormComponent implements OnInit {
     }
   }
 
+  private deepCopyTruck(truck: Truck): Truck {
+    // Use JSON methods for true deep copy, then restore Date objects
+    const copy = JSON.parse(JSON.stringify(truck));
+
+    // Restore Date objects if they exist
+    if (copy.lastServiceDate) {
+      copy.lastServiceDate = new Date(copy.lastServiceDate);
+    }
+    if (copy.nextServiceDue) {
+      copy.nextServiceDue = new Date(copy.nextServiceDue);
+    }
+
+    // Restore Date objects in failures
+    if (copy.failures) {
+      copy.failures.forEach((failure: any) => {
+        if (failure.detectedDate) {
+          failure.detectedDate = new Date(failure.detectedDate);
+        }
+        if (failure.resolvedDate) {
+          failure.resolvedDate = new Date(failure.resolvedDate);
+        }
+        if (failure.videoContent) {
+          failure.videoContent.forEach((video: any) => {
+            if (video.uploadDate) {
+              video.uploadDate = new Date(video.uploadDate);
+            }
+          });
+        }
+      });
+    }
+
+    return copy;
+  }
+
   onSubmit() {
     if (this.validateForm()) {
       this.save.emit(this.formData);
@@ -77,6 +117,7 @@ export class TruckFormComponent implements OnInit {
   }
 
   onCancel() {
+    console.log('onCancel - Form data videos count before cancel:', this.formData.failures?.[0]?.videoContent?.length || 0);
     this.cancel.emit();
   }
 
@@ -135,11 +176,15 @@ export class TruckFormComponent implements OnInit {
   }
 
   onVideoRemoved(failureIndex: number, video: VideoContent) {
+    console.log('onVideoRemoved - Before removal, videos count:', this.formData.failures[failureIndex]?.videoContent?.length || 0);
+
     const failure = this.formData.failures[failureIndex];
     if (failure.videoContent) {
       const index = failure.videoContent.findIndex(v => v.id === video.id);
       if (index !== -1) {
         failure.videoContent.splice(index, 1);
+        console.log('onVideoRemoved - After removal, videos count:', failure.videoContent.length);
+        // Note: We don't trigger automatic save here, only when user clicks Save button
       }
     }
   }

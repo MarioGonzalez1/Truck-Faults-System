@@ -23,6 +23,8 @@ export interface Project {
 })
 export class ProjectDashboardComponent implements OnInit {
   projects: Project[] = [];
+  filteredProjects: Project[] = [];
+  searchTerm: string = '';
   showCreateProject = false;
   editingProject: Project | null = null;
   projectData = {
@@ -44,6 +46,7 @@ export class ProjectDashboardComponent implements OnInit {
         ...p,
         createdAt: new Date(p.createdAt)
       }));
+      this.filterProjects();
     } else {
       // If no projects in localStorage, try to load from fallback JSON file
       this.loadFallbackProjects();
@@ -61,11 +64,13 @@ export class ProjectDashboardComponent implements OnInit {
           }));
           // Save the fallback projects to localStorage
           this.saveProjects();
+          this.filterProjects();
         }
       },
       error: (error) => {
         console.warn('Could not load fallback projects data:', error);
         this.projects = [];
+        this.filteredProjects = [];
       }
     });
   }
@@ -100,6 +105,7 @@ export class ProjectDashboardComponent implements OnInit {
     }
 
     this.saveProjects();
+    this.filterProjects();
     this.closeModal();
   }
 
@@ -126,6 +132,7 @@ export class ProjectDashboardComponent implements OnInit {
     if (confirmed) {
       this.projects = this.projects.filter(p => p.id !== project.id);
       this.saveProjects();
+      this.filterProjects();
     }
   }
 
@@ -142,5 +149,27 @@ export class ProjectDashboardComponent implements OnInit {
     return project.trucks.reduce((total, truck) => {
       return total + (truck.failures ? truck.failures.length : 0);
     }, 0);
+  }
+
+  // Search functionality
+  onSearchChange(): void {
+    this.filterProjects();
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.filterProjects();
+  }
+
+  private filterProjects(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredProjects = [...this.projects];
+    } else {
+      const searchLower = this.searchTerm.toLowerCase();
+      this.filteredProjects = this.projects.filter(project =>
+        project.title.toLowerCase().includes(searchLower) ||
+        (project.description && project.description.toLowerCase().includes(searchLower))
+      );
+    }
   }
 }

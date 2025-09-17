@@ -26,40 +26,79 @@
     <div class="dashboard-container fade-in">
       <div class="dashboard-content">
 
+        <!-- Search Section -->
+        <div class="search-section animate-stagger" *ngIf="projects.length > 0" style="animation-delay: 0.1s">
+          <div class="search-container">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input
+              type="text"
+              placeholder="Search projects..."
+              class="search-input"
+              [(ngModel)]="searchTerm"
+              (input)="onSearchChange()"
+            />
+            <button
+              *ngIf="searchTerm"
+              class="clear-search-btn"
+              (click)="clearSearch()"
+              type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+
         <!-- Projects Grid -->
         <div class="projects-section animate-stagger" *ngIf="projects.length > 0" style="animation-delay: 0.2s">
-          <h3>Your Projects</h3>
+          <h3>Project Modules</h3>
           <div class="projects-grid">
-            <div *ngFor="let project of projects; let i = index"
+            <div *ngFor="let project of filteredProjects; let i = index"
                  class="project-card card-hover animate-stagger"
                  [style.animation-delay]="(0.3 + i * 0.1) + 's'"
                  (click)="openProject(project)">
-              <div class="project-header">
-                <h4>{{ project.title }}</h4>
-                <div class="project-actions">
-                  <button (click)="editProject(project, $event)" class="action-btn edit">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button (click)="deleteProject(project, $event)" class="action-btn delete">
-                    <mat-icon>delete</mat-icon>
-                  </button>
+
+              <!-- Left side: Project info -->
+              <div class="project-main-info">
+                <div class="project-header">
+                  <div class="project-title-section">
+                    <mat-icon class="project-icon">settings</mat-icon>
+                    <h4>{{ project.title }}</h4>
+                  </div>
+                </div>
+                <div class="project-stats">
+                  <div class="stat">
+                    <mat-icon>local_shipping</mat-icon>
+                    <span>{{ project.trucks.length }} Trucks</span>
+                  </div>
+                  <div class="stat">
+                    <mat-icon>bug_report</mat-icon>
+                    <span>{{ getTotalIssues(project) }} Issues</span>
+                  </div>
                 </div>
               </div>
-              <div class="project-stats">
-                <div class="stat">
-                  <mat-icon>local_shipping</mat-icon>
-                  <span>{{ project.trucks.length }} Trucks</span>
-                </div>
-                <div class="stat">
-                  <mat-icon>bug_report</mat-icon>
-                  <span>{{ getTotalIssues(project) }} Issues</span>
-                </div>
-              </div>
+
+              <!-- Center: Date -->
               <div class="project-date">
                 Created: {{ project.createdAt | date:'short' }}
               </div>
+
+              <!-- Right side: Actions -->
+              <div class="project-actions">
+                <button (click)="editProject(project, $event)" class="action-btn edit">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button (click)="deleteProject(project, $event)" class="action-btn delete">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </div>
           </div>
+        </div>
+
+        <!-- No Search Results -->
+        <div *ngIf="projects.length > 0 && filteredProjects.length === 0" class="empty-state">
+          <mat-icon>search_off</mat-icon>
+          <h3>No Projects Found</h3>
+          <p>No projects match your search criteria. Try a different search term.</p>
         </div>
 
         <!-- Empty State -->

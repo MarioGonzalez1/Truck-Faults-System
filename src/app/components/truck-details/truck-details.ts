@@ -64,7 +64,8 @@ export class TruckDetailsComponent implements OnInit {
 
     // Listen to truck updates to refresh current truck data
     this.truckService.truckUpdated.subscribe(updatedTruck => {
-      if (updatedTruck && this.truck && updatedTruck.vin === this.truck.vin) {
+      // Only update if not in editing mode to avoid interference
+      if (updatedTruck && this.truck && updatedTruck.vin === this.truck.vin && !this.isEditing) {
         this.truck = updatedTruck;
       }
     });
@@ -86,6 +87,7 @@ export class TruckDetailsComponent implements OnInit {
   loadTruck(vin: string) {
     this.loading = true;
     this.truckService.getTruckByVin(vin).subscribe(truck => {
+      console.log('loadTruck - Loaded truck videos from storage:', truck?.failures?.[0]?.videoContent?.length || 0);
       this.truck = truck || null;
       this.loading = false;
       if (!truck) {
@@ -152,8 +154,9 @@ export class TruckDetailsComponent implements OnInit {
   }
 
   cancelEdit() {
+    console.log('cancelEdit - Current truck videos before reload:', this.truck?.failures?.[0]?.videoContent?.length || 0);
     this.isEditing = false;
-    // Reload truck data to cancel changes
+    // Force reload truck data from storage to cancel any unsaved changes
     if (this.truck) {
       this.loadTruck(this.truck.vin);
     }
