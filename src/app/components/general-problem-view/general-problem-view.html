@@ -1,0 +1,316 @@
+<div class="app-container" *ngIf="project">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="header-right-content">
+        <div class="brand-section">
+          <!-- Primary Project Info -->
+          <div class="header-primary-info">
+            <div class="header-meta-item date-info">
+              <mat-icon>schedule</mat-icon>
+              <span>{{ project.createdAt | date:'MMM d, y' }}</span>
+            </div>
+
+            <div class="header-divider"></div>
+
+            <div class="header-badges">
+              <span class="header-severity-badge" [style.background-color]="getSeverityColor(project.severity || 'medium')">
+                {{ (project.severity || 'medium') | uppercase }}
+              </span>
+              <span class="header-status-badge" [style.background-color]="getStatusColor(project.status || 'open')">
+                {{ (project.status || 'open') | uppercase }}
+              </span>
+            </div>
+
+            <div class="header-divider" *ngIf="project.tags && project.tags.length > 0 || isEditing"></div>
+
+            <!-- Tags Section -->
+            <div class="header-tags" *ngIf="project.tags && project.tags.length > 0 || isEditing">
+              <!-- View Mode Tags -->
+              <div *ngIf="!isEditing && project.tags && project.tags.length > 0" class="tags-display">
+                <mat-icon class="tags-icon">local_offer</mat-icon>
+                <span *ngFor="let tag of project.tags" class="header-tag">{{ tag }}</span>
+              </div>
+
+              <!-- Edit Mode Tags -->
+              <div *ngIf="isEditing" class="tags-edit-header">
+                <mat-icon class="tags-icon">local_offer</mat-icon>
+                <div class="current-tags-header" *ngIf="editData.tags.length > 0">
+                  <span *ngFor="let tag of editData.tags" class="header-tag editable">
+                    {{ tag }}
+                    <button (click)="removeTag(tag)" class="remove-tag-header">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </span>
+                </div>
+                <div class="add-tag-header">
+                  <input
+                    type="text"
+                    [(ngModel)]="newTag"
+                    (keydown.enter)="addTag()"
+                    placeholder="Add tag..."
+                    class="tag-input-header">
+                  <button (click)="addTag()" class="add-tag-btn-header">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button
+            *ngIf="!isEditing"
+            (click)="startEditing()"
+            class="edit-btn">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </button>
+
+          <div *ngIf="isEditing" class="edit-actions">
+            <button (click)="cancelEditing()" class="cancel-btn">
+              <mat-icon>close</mat-icon>
+              <span>Cancel</span>
+            </button>
+            <button (click)="saveChanges()" class="save-btn">
+              <mat-icon>save</mat-icon>
+              <span>Save</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="problem-container fade-in">
+
+      <!-- Edit Form Section -->
+      <div *ngIf="isEditing" class="edit-form-section animate-stagger" style="animation-delay: 0.1s">
+        <div class="form-group">
+          <label for="edit-title">Project Title</label>
+          <input
+            type="text"
+            id="edit-title"
+            [(ngModel)]="editData.title"
+            class="form-control"
+            placeholder="Enter project title">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-severity">Priority</label>
+            <select id="edit-severity" [(ngModel)]="editData.severity" class="form-control">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-status">Status</label>
+            <select id="edit-status" [(ngModel)]="editData.status" class="form-control">
+              <option value="open">Open</option>
+              <option value="investigating">Investigating</option>
+              <option value="resolved">Resolved</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Problem Description Section -->
+      <div class="description-section animate-stagger" style="animation-delay: 0.2s">
+        <div class="section-header">
+          <mat-icon>description</mat-icon>
+          <h3>Problem Description</h3>
+        </div>
+
+        <div class="description-content" *ngIf="!isEditing">
+          <p class="description-text">{{ project.problemDescription }}</p>
+        </div>
+
+        <div class="description-edit" *ngIf="isEditing">
+          <textarea
+            [(ngModel)]="editData.problemDescription"
+            placeholder="Describe the problem in detail..."
+            class="form-control description-textarea"
+            rows="6"></textarea>
+        </div>
+      </div>
+
+      <!-- Media Section -->
+      <div class="media-section animate-stagger" style="animation-delay: 0.3s">
+        <div class="section-header">
+          <mat-icon>photo_library</mat-icon>
+          <h3>Media Content</h3>
+          <span class="media-count">{{ project.mediaContent.length }} files</span>
+        </div>
+
+        <!-- Media Upload (when editing) -->
+        <div class="media-upload" *ngIf="isEditing">
+          <div class="upload-area">
+            <input
+              type="file"
+              #fileInput
+              (change)="onFileSelected($event)"
+              multiple
+              accept="image/*,video/*"
+              style="display: none">
+
+            <button (click)="fileInput.click()" class="upload-btn">
+              <mat-icon>cloud_upload</mat-icon>
+              <span>Select Files</span>
+            </button>
+
+            <div class="selected-files" *ngIf="selectedFiles.length > 0">
+              <p>{{ selectedFiles.length }} file(s) selected</p>
+              <button (click)="uploadMedia()" class="confirm-upload-btn">
+                <mat-icon>add</mat-icon>
+                Upload Files
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Media Gallery -->
+        <div class="media-gallery" *ngIf="project.mediaContent.length > 0">
+          <div
+            *ngFor="let media of project.mediaContent"
+            class="media-item"
+            [class.video-item]="media.type === 'video'">
+
+            <div class="media-preview" (click)="openMediaModal(media)">
+              <img
+                *ngIf="media.type === 'image'"
+                [src]="media.url"
+                [alt]="media.filename"
+                class="media-image">
+
+              <div *ngIf="media.type === 'video'" class="video-container">
+                <video
+                  [src]="media.url"
+                  class="media-video"
+                  muted>
+                </video>
+                <div class="video-overlay">
+                  <div class="play-button">
+                    <mat-icon>play_arrow</mat-icon>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Image overlay for consistency -->
+              <div *ngIf="media.type === 'image'" class="image-overlay">
+                <div class="view-button">
+                  <mat-icon>zoom_in</mat-icon>
+                </div>
+              </div>
+            </div>
+
+            <div class="media-info">
+              <div class="media-name">{{ media.filename }}</div>
+              <div class="media-meta">
+                <span class="media-date">{{ media.uploadDate | date:'short' }}</span>
+                <span class="media-size" *ngIf="media.fileSize">{{ formatFileSize(media.fileSize) }}</span>
+              </div>
+            </div>
+
+            <button
+              *ngIf="isEditing"
+              (click)="removeMedia(media.id)"
+              class="remove-media-btn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="no-media" *ngIf="project.mediaContent.length === 0">
+          <mat-icon>photo_library</mat-icon>
+          <p>No media files uploaded yet</p>
+          <small *ngIf="!isEditing">Click "Edit" to add photos and videos</small>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="!project">
+  <div class="loading-spinner">
+    <mat-icon>refresh</mat-icon>
+    <p>Loading project...</p>
+  </div>
+</div>
+
+<!-- Media Modal -->
+<div *ngIf="showMediaModal" class="media-modal-overlay" (click)="closeMediaModal()">
+  <div class="media-modal-container" (click)="$event.stopPropagation()">
+    <!-- Navigation Arrow Left -->
+    <button
+      *ngIf="project && project.mediaContent.length > 1"
+      (click)="previousMedia()"
+      class="nav-arrow nav-arrow-left">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <!-- Navigation Arrow Right -->
+    <button
+      *ngIf="project && project.mediaContent.length > 1"
+      (click)="nextMedia()"
+      class="nav-arrow nav-arrow-right">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <div class="media-modal-header">
+      <div class="modal-title-section">
+        <h3>{{ selectedMedia?.filename }}</h3>
+        <div class="media-counter" *ngIf="project && project.mediaContent.length > 1">
+          {{ currentMediaIndex + 1 }} / {{ project.mediaContent.length }}
+        </div>
+      </div>
+      <button (click)="closeMediaModal()" class="close-modal-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="media-modal-content">
+      <!-- Image Display -->
+      <img
+        *ngIf="selectedMedia?.type === 'image'"
+        [src]="selectedMedia?.url"
+        [alt]="selectedMedia?.filename"
+        class="modal-image">
+
+      <!-- Video Display -->
+      <video
+        *ngIf="selectedMedia?.type === 'video'"
+        [src]="selectedMedia?.url"
+        controls
+        autoplay
+        class="modal-video">
+      </video>
+    </div>
+
+    <div class="media-modal-footer" *ngIf="selectedMedia">
+      <div class="media-info-section">
+        <span class="media-type-badge" [class]="selectedMedia.type">
+          <mat-icon>{{ selectedMedia.type === 'image' ? 'image' : 'videocam' }}</mat-icon>
+          {{ selectedMedia.type === 'image' ? 'Imagen' : 'Video' }}
+        </span>
+        <span class="file-size" *ngIf="selectedMedia.fileSize">
+          {{ formatFileSize(selectedMedia.fileSize) }}
+        </span>
+        <span class="upload-date">
+          {{ selectedMedia.uploadDate | date:'medium' }}
+        </span>
+      </div>
+      <div class="modal-controls-hint" *ngIf="project && project.mediaContent.length > 1">
+        <small>Usa las flechas ← → para navegar o presiona ESC para cerrar</small>
+      </div>
+    </div>
+  </div>
+</div>

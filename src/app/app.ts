@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   filteredTrucks: any[] = [];
   manageTruckSearchTerm: string = '';
   showFullInterface = false;
+  isGeneralProblemView = false;
   currentProject: any = null;
 
   constructor(private router: Router, private truckService: TruckService) {
@@ -35,7 +36,8 @@ export class AppComponent implements OnInit {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      this.showFullInterface = event.url.startsWith('/project/');
+      this.showFullInterface = event.url.startsWith('/project/') || event.url.startsWith('/general-problem/');
+      this.isGeneralProblemView = event.url.startsWith('/general-problem/');
 
       // Load current project if we're in project view
       if (this.showFullInterface) {
@@ -72,7 +74,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.loadTrucks();
     // Check initial route
-    this.showFullInterface = this.router.url.startsWith('/project/');
+    this.showFullInterface = this.router.url.startsWith('/project/') || this.router.url.startsWith('/general-problem/');
+    this.isGeneralProblemView = this.router.url.startsWith('/general-problem/');
     if (this.showFullInterface) {
       this.loadCurrentProject();
     }
