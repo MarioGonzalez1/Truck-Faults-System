@@ -62,8 +62,8 @@ stages:
               # Create artifact directory
               mkdir -p $(Build.ArtifactStagingDirectory)/release
 
-              # Copy built application
-              cp -r dist/truck-faults-system/* $(Build.ArtifactStagingDirectory)/release/
+              # Copy built application (Angular outputs to browser subdirectory)
+              cp -r dist/truck-failures/browser/* $(Build.ArtifactStagingDirectory)/release/
 
               # Create deployment info
               echo "Build: $(Build.BuildNumber)" > $(Build.ArtifactStagingDirectory)/release/build-info.txt
