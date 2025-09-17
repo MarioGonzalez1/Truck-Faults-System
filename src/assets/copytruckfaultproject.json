@@ -521,11 +521,12 @@
                 "manufacturer": "KENWORTH",
                 "id": "1XKYD49X6RJ357368"
             }
-        ]
+        ],
+        "type": "truck-fleet"
     },
     {
         "id": "1758067632233",
-        "title": "Rear Mainshaft Seal Fault Analysis",
+        "title": "T680 - Rear Mainshaft Seal Fault Analysis",
         "description": "REAR MAINSHAFT SEAL",
         "createdAt": "2025-09-17T00:07:12.233Z",
         "trucks": [
@@ -547,7 +548,7 @@
                             {
                                 "id": "video_6sfhl34nj_1758067761776",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/e497f06e-9a8c-4a0c-90c1-826bdf12ce91",
+                                "url": "/assets/1049 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1049 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 16150131,
                                 "duration": 75.017933,
@@ -578,7 +579,7 @@
                             {
                                 "id": "video_tcw7xngw6_1758067958172",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/c1ba017e-2e00-4a91-9cd5-4c25f05cdd63",
+                                "url": "/assets/1067 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1067 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 12397049,
                                 "duration": 55.508458,
@@ -609,7 +610,7 @@
                             {
                                 "id": "video_74mg458x2_1758068088273",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/367e36a7-3bf6-4f03-8b9d-393581ce6389",
+                                "url": "/assets/1074 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1074 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 7853203,
                                 "duration": 42.329977,
@@ -640,7 +641,7 @@
                             {
                                 "id": "video_3s88npex3_1758068139808",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/81744005-4849-4a28-8219-f69aa0bb7773",
+                                "url": "/assets/1088 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1088 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 5494129,
                                 "duration": 35.666667,
@@ -671,7 +672,7 @@
                             {
                                 "id": "video_yse4y7u20_1758068208092",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/07e81ea7-84e3-423f-b1b9-a403cbca99b4",
+                                "url": "/assets/1096 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1096 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 14371214,
                                 "duration": 64.447,
@@ -702,7 +703,7 @@
                             {
                                 "id": "video_4k01r28yu_1758068262410",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/659516fb-2d57-478a-a060-bb0569bb2ac6",
+                                "url": "/assets/1097 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1097 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 5465327,
                                 "duration": 29.5,
@@ -733,7 +734,7 @@
                             {
                                 "id": "video_s8hkstrq1_1758068326142",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/755f0565-380b-4510-9048-d31b3bea6ff6",
+                                "url": "/assets/1106 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1106 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 15551633,
                                 "duration": 69.883067,
@@ -764,7 +765,7 @@
                             {
                                 "id": "video_enc5x2b7z_1758068377481",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/2bdfe8e6-bc4b-4a50-aac3-902af89611e1",
+                                "url": "/assets/1115 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1115 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 3247864,
                                 "duration": 16.583167,
@@ -795,7 +796,7 @@
                             {
                                 "id": "video_z8u7q7smk_1758068433913",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/8c6f7b9a-e121-4d50-9e7e-e4020a537efb",
+                                "url": "/assets/1116 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1116 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 2469040,
                                 "duration": 10.955733,
@@ -826,7 +827,7 @@
                             {
                                 "id": "video_qom19ruu2_1758068474098",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/5b9cf58c-9264-4275-8ad4-2c88421ea30f",
+                                "url": "/assets/1126 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1126 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 36329593,
                                 "duration": 91.393741,
@@ -857,7 +858,7 @@
                             {
                                 "id": "video_8lxuvfudw_1758068529799",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/15e64430-165b-4403-8eb5-b8433bea340a",
+                                "url": "/assets/1130 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1130 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 8923197,
                                 "duration": 39.880533,
@@ -888,7 +889,7 @@
                             {
                                 "id": "video_gibm4m7xg_1758068571002",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/0c86ca8d-c4cb-42ee-9d69-7498d8cd6ca4",
+                                "url": "/assets/1136 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1136 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 8416748,
                                 "duration": 44.559093,
@@ -919,7 +920,7 @@
                             {
                                 "id": "video_5bf3gulnw_1758068657010",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/0a9dc5b9-3908-41f9-a3fb-32769d4a9358",
+                                "url": "/assets/1137 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1137 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 14193775,
                                 "duration": 55.146067,
@@ -950,7 +951,7 @@
                             {
                                 "id": "video_3q6xqble3_1758068705608",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/860e16df-9649-49f8-9103-8ea66a54f019",
+                                "url": "/assets/1142 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1142 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 13858001,
                                 "duration": 62.015042,
@@ -981,7 +982,7 @@
                             {
                                 "id": "video_nlfyh324r_1758068779619",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/da14fc98-4666-456e-b2fd-c06ebf3ecb97",
+                                "url": "/assets/1144 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1144 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 6685822,
                                 "duration": 35.247891,
@@ -1012,7 +1013,7 @@
                             {
                                 "id": "video_j0i57d665_1758068827979",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/3851274e-1b8d-4614-aaaa-e2100231acd6",
+                                "url": "/assets/1147 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1147 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 2791382,
                                 "duration": 15.876333,
@@ -1043,7 +1044,7 @@
                             {
                                 "id": "video_axjifgz6j_1758068870984",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/a5cddfa6-d3b1-47a4-a320-ab39c89e94a0",
+                                "url": "/assets/1148 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1148 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 6032271,
                                 "duration": 26.868533,
@@ -1074,7 +1075,7 @@
                             {
                                 "id": "video_rz1sgtdvw_1758068914407",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/cc235d4d-8042-4478-a9a9-61cdd37900d6",
+                                "url": "/assets/1152 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1152 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 12184340,
                                 "duration": 54.485333,
@@ -1105,7 +1106,7 @@
                             {
                                 "id": "video_zqy2srulg_1758068956762",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/a4ec545e-f0a5-4c88-b06a-ef5ec44af117",
+                                "url": "/assets/1259 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1259 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 12434713,
                                 "duration": 55.456633,
@@ -1136,7 +1137,7 @@
                             {
                                 "id": "video_kw2lao78x_1758068999329",
                                 "type": "UPLOADED",
-                                "url": "blob:http://localhost:4200/d78612fa-e954-45e4-9746-fa8dcea95297",
+                                "url": "/assets/1334 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileName": "1334 REAR MAIN SHAFT SEAL LEAKING OIL.mp4",
                                 "fileSize": 9000993,
                                 "duration": 40.192,
@@ -1149,6 +1150,219 @@
                 "manufacturer": "KENWORTH",
                 "id": "1XKYD49X4SJ158471"
             }
-        ]
+        ],
+        "type": "truck-fleet"
+    },
+    {
+        "id": "1758077083364",
+        "title": "Transmission Problem",
+        "description": "Transmission Problem",
+        "type": "general-problem",
+        "createdAt": "2025-09-17T02:44:43.364Z",
+        "trucks": [],
+        "problemDescription": "During the inspection of the transmission and its electronic control module (TCM/ECU), several problems were identified:\n\t1.\tElectronic Module Corrosion and Damage\n\t•\tRust and moisture were found around the module’s mounting bolts, indicating water intrusion.\n\t•\tA black burnt spot on the circuit board suggests possible overheating or a short circuit, which can cause intermittent electrical failures or loss of communication between the TCM and the transmission.\n\t2.\tInternal Transmission Wear\n\t•\tInside the transmission housing there is a heavy reddish-brown dust, which is a mixture of burned oil and friction material from the clutch packs.\n\t•\tThis points to prolonged clutch wear and possible overheating, which can lead to slipping gears, harsh shifting, or hydraulic pressure loss.\n\t3.\tHydraulic Rail “B” Concerns\n\t•\tThe “rail B” is the hydraulic control assembly responsible for directing fluid pressure to the correct clutches during gear changes.\n\t•\tIf the electronic module fails to send accurate signals, or if contamination from friction material blocks the passages, the rail B cannot operate correctly—causing delayed or erratic shifting.",
+        "mediaContent": [
+            {
+                "id": "1758078802424phubpu0j6",
+                "type": "video",
+                "filename": "TransmisionProblem21.mp4",
+                "url": "./assets/TransmisionProblem21.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.424Z",
+                "fileSize": 74477683
+            },
+            {
+                "id": "1758078802425ptc1pk9dq",
+                "type": "video",
+                "filename": "TransmisionProblem20.mp4",
+                "url": "./assets/TransmisionProblem20.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.425Z",
+                "fileSize": 18168081
+            },
+            {
+                "id": "1758078802425bjb5xm5zn",
+                "type": "video",
+                "filename": "TransmisionProblem19.mp4",
+                "url": "./assets/TransmisionProblem19.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.425Z",
+                "fileSize": 8249627
+            },
+            {
+                "id": "1758078802426mckyz6z3j",
+                "type": "video",
+                "filename": "TransmisionProblem18.mp4",
+                "url": "./assets/TransmisionProblem18.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.426Z",
+                "fileSize": 16617434
+            },
+            {
+                "id": "1758078802426orr3zxrap",
+                "type": "video",
+                "filename": "TransmisionProblem17.mp4",
+                "url": "./assets/TransmisionProblem17.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.426Z",
+                "fileSize": 7998122
+            },
+            {
+                "id": "1758078802426gcc221t0v",
+                "type": "video",
+                "filename": "TransmisionProblem16.mp4",
+                "url": "./assets/TransmisionProblem16.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.427Z",
+                "fileSize": 9294288
+            },
+            {
+                "id": "1758078802427iffw0yjpx",
+                "type": "image",
+                "filename": "TransmisionProblem15.jpeg",
+                "url": "./assets/TransmisionProblem15.jpeg",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.427Z",
+                "fileSize": 227914
+            },
+            {
+                "id": "17580788024271dp58tbsw",
+                "type": "video",
+                "filename": "TransmisionProblem14.mp4",
+                "url": "./assets/TransmisionProblem14.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.428Z",
+                "fileSize": 1102508
+            },
+            {
+                "id": "1758078802428e76m74i1j",
+                "type": "image",
+                "filename": "TransmisionProblem13.jpeg",
+                "url": "./assets/TransmisionProblem13.jpeg",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.428Z",
+                "fileSize": 406042
+            },
+            {
+                "id": "1758078802428nmufgijus",
+                "type": "video",
+                "filename": "TransmisionProblem12.mp4",
+                "url": "./assets/TransmisionProblem12.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.428Z",
+                "fileSize": 4051812
+            },
+            {
+                "id": "1758078802428w0eb4n9cs",
+                "type": "video",
+                "filename": "TransmisionProblem11.mp4",
+                "url": "./assets/TransmisionProblem11.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.428Z",
+                "fileSize": 15403070
+            },
+            {
+                "id": "1758078802429hml8n2wgh",
+                "type": "video",
+                "filename": "TransmisionProblem10.mp4",
+                "url": "./assets/TransmisionProblem10.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.429Z",
+                "fileSize": 3151851
+            },
+            {
+                "id": "175807880242960cwlj8xd",
+                "type": "video",
+                "filename": "TransmisionProblem9.mp4",
+                "url": "./assets/TransmisionProblem9.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.429Z",
+                "fileSize": 11014154
+            },
+            {
+                "id": "175807880242909x5rownz",
+                "type": "video",
+                "filename": "TransmisionProblem8.mp4",
+                "url": "./assets/TransmisionProblem8.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.429Z",
+                "fileSize": 41787635
+            },
+            {
+                "id": "17580788024305rrqpexhu",
+                "type": "video",
+                "filename": "TransmisionProblem7.mp4",
+                "url": "./assets/TransmisionProblem7.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.430Z",
+                "fileSize": 38212340
+            },
+            {
+                "id": "1758078802430klj327jzc",
+                "type": "video",
+                "filename": "TransmisionProblem6.mp4",
+                "url": "./assets/TransmisionProblem6.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.430Z",
+                "fileSize": 14878122
+            },
+            {
+                "id": "1758078802430aj3zy275c",
+                "type": "video",
+                "filename": "TransmisionProblem5.mp4",
+                "url": "./assets/TransmisionProblem5.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.430Z",
+                "fileSize": 19242903
+            },
+            {
+                "id": "1758078802431ojkup0k2u",
+                "type": "video",
+                "filename": "TransmisionProblem3.mp4",
+                "url": "./assets/TransmisionProblem3.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.431Z",
+                "fileSize": 7702047
+            },
+            {
+                "id": "17580788024312nxotg0yp",
+                "type": "video",
+                "filename": "TransmisionProblem2.mp4",
+                "url": "./assets/TransmisionProblem2.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.431Z",
+                "fileSize": 16257291
+            },
+            {
+                "id": "1758078802431l2x4kfpag",
+                "type": "video",
+                "filename": "TransmisionProblem1.mp4",
+                "url": "./assets/TransmisionProblem1.mp4",
+                "description": "",
+                "uploadDate": "2025-09-17T03:13:22.431Z",
+                "fileSize": 10851835
+            },
+            {
+                "id": "17581439878552x4p2ki74",
+                "type": "video",
+                "filename": "TransmissionProblem22.mp4",
+                "url": "blob:https://truck-fault-system.forzacore.app/1da8c820-230f-4319-a3d0-e1f92fa495b0",
+                "description": "",
+                "uploadDate": "2025-09-17T21:19:47.856Z",
+                "fileSize": 6647519
+            },
+            {
+                "id": "1758144510459yc0krnfov",
+                "type": "video",
+                "filename": "TransmissionProblem23.mp4",
+                "url": "blob:https://truck-fault-system.forzacore.app/c59688b1-b13e-4372-b98f-0705638c71a8",
+                "description": "",
+                "uploadDate": "2025-09-17T21:28:30.459Z",
+                "fileSize": 14017186
+            }
+        ],
+        "severity": "critical",
+        "status": "open",
+        "tags": []
     }
 ]

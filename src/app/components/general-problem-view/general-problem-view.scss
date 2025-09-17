@@ -1179,3 +1179,110 @@
     transform: scale(1);
   }
 }
+
+// ========================================
+// PROFESSIONAL PROJECT ENTRY TRANSITIONS
+// ========================================
+
+// Main container entrance animation
+.app-container {
+  animation: projectEntrance 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+}
+
+// Header entrance with slide down
+.header {
+  animation: slideDownFade 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+  animation-delay: 0.1s;
+}
+
+// Main content entrance with slide up
+.main-content {
+  animation: slideUpFade 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+  animation-delay: 0.2s;
+}
+
+// Enhanced fade-in with better timing
+.fade-in {
+  animation: enhancedFadeIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) both !important;
+}
+
+// Staggered content animation improvements
+.animate-stagger {
+  animation: contentSlideIn 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+}
+
+// Professional entrance keyframes
+@keyframes projectEntrance {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(20px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes slideDownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes enhancedFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.97);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes contentSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Loading state improvements
+.loading-container {
+  animation: loadingPulse 0.3s ease-in-out both;
+}
+
+@keyframes loadingPulse {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
