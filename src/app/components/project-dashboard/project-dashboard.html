@@ -61,15 +61,19 @@
                 <div class="project-header">
                   <div class="project-title-section">
                     <mat-icon class="project-icon">
-                      {{ project.type === 'general-problem' ? 'description' : 'settings' }}
+                      {{ project.type === 'general-problem' ? 'description' :
+                         project.type === 'presentation' ? 'slideshow' : 'settings' }}
                     </mat-icon>
                     <h4>{{ project.title }}</h4>
-                    <span class="project-type-badge" [class]="project.type === 'general-problem' ? 'general-badge' : 'fleet-badge'">
-                      {{ project.type === 'general-problem' ? 'Problem Report' : 'Fleet Analysis' }}
+                    <span class="project-type-badge"
+                          [class]="project.type === 'general-problem' ? 'general-badge' :
+                                   project.type === 'presentation' ? 'presentation-badge' : 'fleet-badge'">
+                      {{ project.type === 'general-problem' ? 'Problem Report' :
+                         project.type === 'presentation' ? 'Presentation' : 'Fleet Analysis' }}
                     </span>
                   </div>
                 </div>
-                <div class="project-stats" *ngIf="project.type !== 'general-problem'">
+                <div class="project-stats" *ngIf="project.type === 'truck-fleet'">
                   <div class="stat">
                     <mat-icon>local_shipping</mat-icon>
                     <span>{{ project.trucks.length }} Trucks</span>
@@ -87,6 +91,16 @@
                   <div class="stat">
                     <mat-icon>photo_library</mat-icon>
                     <span>Media Report</span>
+                  </div>
+                </div>
+                <div class="project-stats" *ngIf="project.type === 'presentation'">
+                  <div class="stat">
+                    <mat-icon>slideshow</mat-icon>
+                    <span>Presentation</span>
+                  </div>
+                  <div class="stat">
+                    <mat-icon>link</mat-icon>
+                    <span>External Link</span>
                   </div>
                 </div>
               </div>
@@ -149,9 +163,12 @@
               class="form-control">
               <option value="truck-fleet">Truck Fleet Analysis</option>
               <option value="general-problem">General Problem Report</option>
+              <option value="presentation">Presentation Viewer</option>
             </select>
             <small class="form-text">
-              Choose "General Problem Report" for simple problem descriptions with media
+              <span *ngIf="projectData.type === 'truck-fleet'">Analyze truck fleet performance and issues</span>
+              <span *ngIf="projectData.type === 'general-problem'">Document problems with media content</span>
+              <span *ngIf="projectData.type === 'presentation'">Display existing presentations via URL</span>
             </small>
           </div>
 
@@ -167,18 +184,152 @@
               class="form-control">
           </div>
 
+          <!-- Presentation URL field for presentation projects -->
+          <div class="form-group" *ngIf="projectData.type === 'presentation'">
+            <label for="presentationUrl">Presentation URL</label>
+            <input
+              type="url"
+              id="presentationUrl"
+              name="presentationUrl"
+              [(ngModel)]="projectData.presentationUrl"
+              required
+              placeholder="https://example.com/your-presentation"
+              class="form-control">
+            <small class="form-text">
+              Enter the URL of your existing presentation (supports most presentation platforms)
+            </small>
+          </div>
+
           <div class="form-group">
             <label for="description">
-              {{ projectData.type === 'general-problem' ? 'Problem Description' : 'Description (Optional)' }}
+              {{ projectData.type === 'general-problem' ? 'Problem Description' :
+                 projectData.type === 'presentation' ? 'Description (Optional)' : 'Description (Optional)' }}
             </label>
             <textarea
               id="description"
               name="description"
               [(ngModel)]="projectData.description"
-              [placeholder]="projectData.type === 'general-problem' ? 'Describe the problem in detail...' : 'Enter project description'"
+              [placeholder]="projectData.type === 'general-problem' ? 'Describe the problem in detail...' :
+                             projectData.type === 'presentation' ? 'Add any notes about this presentation...' :
+                             'Enter project description'"
               class="form-control"
               [rows]="projectData.type === 'general-problem' ? 6 : 3"
               [required]="projectData.type === 'general-problem'"></textarea>
+          </div>
+
+          <!-- CSV Template Section for Truck Fleet Projects -->
+          <div class="csv-template-section" *ngIf="projectData.type === 'truck-fleet' && !editingProject">
+            <div class="template-header">
+              <mat-icon>description</mat-icon>
+              <h3>Batch Data Upload</h3>
+            </div>
+            <p class="template-description">
+              Download the CSV template to upload multiple trucks at once. Fill the template with your fleet data and upload it after creating the project.
+            </p>
+
+            <div class="template-actions">
+              <button type="button" (click)="downloadCsvTemplate()" class="btn btn-template">
+                <mat-icon>download</mat-icon>
+                Download CSV Template
+              </button>
+            </div>
+
+            <!-- CSV Upload Section -->
+            <div class="csv-upload-section">
+              <div class="upload-header">
+                <h4>Upload Fleet Data (Optional)</h4>
+                <p>Upload your filled CSV file to import trucks automatically</p>
+              </div>
+
+              <div class="upload-area" *ngIf="!selectedCsvFile && !isProcessingCsv">
+                <input
+                  type="file"
+                  id="csvFileInput"
+                  accept=".csv"
+                  (change)="onCsvFileSelected($event)"
+                  style="display: none;">
+                <label for="csvFileInput" class="upload-label">
+                  <mat-icon>cloud_upload</mat-icon>
+                  <span>Choose CSV File</span>
+                  <small>Click to select your filled CSV template</small>
+                </label>
+              </div>
+
+              <!-- Processing State -->
+              <div class="processing-state" *ngIf="isProcessingCsv">
+                <mat-icon class="spinning">sync</mat-icon>
+                <span>Processing CSV file...</span>
+              </div>
+
+              <!-- File Selected -->
+              <div class="file-selected" *ngIf="selectedCsvFile && !isProcessingCsv">
+                <div class="file-info">
+                  <mat-icon>description</mat-icon>
+                  <div class="file-details">
+                    <span class="file-name">{{ selectedCsvFile.name }}</span>
+                    <small class="file-size">{{ (selectedCsvFile.size / 1024).toFixed(1) }} KB</small>
+                  </div>
+                  <button type="button" (click)="removeCsvFile()" class="remove-file-btn">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <!-- CSV Parse Results -->
+              <div class="csv-results" *ngIf="showCsvResults && csvParseResult">
+                <div class="results-summary" [class.success]="csvParseResult.success" [class.error]="!csvParseResult.success">
+                  <mat-icon>{{ csvParseResult.success ? 'check_circle' : 'error' }}</mat-icon>
+                  <div class="summary-text">
+                    <span class="summary-title">
+                      {{ csvParseResult.success ? 'CSV Processed Successfully' : 'CSV Processing Completed with Errors' }}
+                    </span>
+                    <div class="summary-details">
+                      <span>{{ csvParseResult.validRows }} of {{ csvParseResult.totalRows }} rows processed</span>
+                      <span *ngIf="csvParseResult.errors.length > 0">{{ csvParseResult.errors.length }} errors found</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Error Details -->
+                <div class="error-details" *ngIf="csvParseResult.errors.length > 0">
+                  <h5>Errors found:</h5>
+                  <ul class="error-list">
+                    <li *ngFor="let error of csvParseResult.errors" class="error-item">
+                      <strong>Row {{ error.row }}:</strong> {{ error.message }}
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Success Details -->
+                <div class="success-details" *ngIf="csvParseResult.success && csvParseResult.trucks.length > 0">
+                  <h5>{{ csvParseResult.trucks.length }} trucks ready to import:</h5>
+                  <ul class="truck-preview">
+                    <li *ngFor="let truck of csvParseResult.trucks.slice(0, 3)" class="truck-item">
+                      <span class="truck-unit">Unit {{ truck.unitNumber }}</span>
+                      <span class="truck-model">{{ truck.manufacturer }} {{ truck.model }}</span>
+                      <span class="truck-vin">{{ truck.vin }}</span>
+                    </li>
+                    <li *ngIf="csvParseResult.trucks.length > 3" class="truck-item more">
+                      + {{ csvParseResult.trucks.length - 3 }} more trucks
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="template-info">
+              <h4>Template includes:</h4>
+              <ul class="template-fields">
+                <li><strong>Required (*):</strong> Unit Number, VIN, Engine Number, Odometer Reading, Engine Hours</li>
+                <li><strong>Auto-detected:</strong> Manufacturer, Model, Year (from VIN)</li>
+                <li><strong>Optional:</strong> Engine details, Service dates</li>
+              </ul>
+
+              <div class="template-note">
+                <mat-icon>info</mat-icon>
+                <span>Fields marked with asterisks (*) in the CSV headers are required.</span>
+              </div>
+            </div>
           </div>
 
           <div class="form-actions">

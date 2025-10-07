@@ -5,8 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClient } from '@angular/common/http';
 import { ProjectService } from '../../services/project';
+import { CsvTemplateService } from '../../services/csv-template.service';
+import { CsvParserService, CsvParseResult } from '../../services/csv-parser.service';
 
-export type ProjectType = 'truck-fleet' | 'general-problem';
+export type ProjectType = 'truck-fleet' | 'general-problem' | 'presentation';
 
 export interface Project {
   id: string;
@@ -36,6 +38,12 @@ export interface GeneralProblemProject extends Project {
   tags?: string[];
 }
 
+export interface PresentationProject extends Project {
+  type: 'presentation';
+  presentationUrl: string;
+}
+
+
 @Component({
   selector: 'app-project-dashboard',
   standalone: true,
@@ -52,10 +60,23 @@ export class ProjectDashboardComponent implements OnInit {
   projectData = {
     title: '',
     description: '',
-    type: 'truck-fleet' as ProjectType
+    type: 'truck-fleet' as ProjectType,
+    presentationUrl: ''
   };
 
-  constructor(private router: Router, private projectService: ProjectService, private http: HttpClient) {}
+  // CSV Upload properties
+  selectedCsvFile: File | null = null;
+  csvParseResult: CsvParseResult | null = null;
+  showCsvResults = false;
+  isProcessingCsv = false;
+
+  constructor(
+    private router: Router,
+    private projectService: ProjectService,
+    private http: HttpClient,
+    private csvTemplateService: CsvTemplateService,
+    private csvParserService: CsvParserService
+  ) {}
 
   ngOnInit() {
     this.loadProjects();
@@ -138,17 +159,37 @@ export class ProjectDashboardComponent implements OnInit {
           tags: []
         };
         this.projects.push(newProject);
+      } else if (this.projectData.type === 'presentation') {
+        const newProject: PresentationProject = {
+          id: Date.now().toString(),
+          title: this.projectData.title,
+          description: this.projectData.description,
+          type: 'presentation',
+          createdAt: new Date(),
+          trucks: [], // Keep for compatibility
+          presentationUrl: this.projectData.presentationUrl
+        };
+        this.projects.push(newProject);
       } else {
         // Regular truck fleet project
+        const trucks = this.csvParseResult?.success ? this.csvParseResult.trucks : [];
+
         const newProject: Project = {
           id: Date.now().toString(),
           title: this.projectData.title,
           description: this.projectData.description,
           type: 'truck-fleet',
           createdAt: new Date(),
-          trucks: []
+          trucks: trucks
         };
         this.projects.push(newProject);
+
+        // Show success message if CSV was processed
+        if (this.csvParseResult?.success && trucks.length > 0) {
+          setTimeout(() => {
+            alert(`Project created successfully with ${trucks.length} trucks imported from CSV!`);
+          }, 100);
+        }
       }
     }
 
@@ -173,6 +214,8 @@ export class ProjectDashboardComponent implements OnInit {
         // Navigate based on project type
         if (project.type === 'general-problem') {
           this.router.navigate(['/general-problem', project.id]);
+        } else if (project.type === 'presentation') {
+          this.router.navigate(['/presentation', project.id]);
         } else {
           // Navigate to the truck fault analysis system
           this.router.navigate(['/project', project.id]);
@@ -184,6 +227,8 @@ export class ProjectDashboardComponent implements OnInit {
 
       if (project.type === 'general-problem') {
         this.router.navigate(['/general-problem', project.id]);
+      } else if (project.type === 'presentation') {
+        this.router.navigate(['/presentation', project.id]);
       } else {
         this.router.navigate(['/project', project.id]);
       }
@@ -196,7 +241,8 @@ export class ProjectDashboardComponent implements OnInit {
     this.projectData = {
       title: project.title,
       description: project.description || '',
-      type: project.type || 'truck-fleet'
+      type: project.type || 'truck-fleet',
+      presentationUrl: project.type === 'presentation' ? (project as PresentationProject).presentationUrl : ''
     };
     this.showCreateProject = true;
   }
@@ -217,8 +263,80 @@ export class ProjectDashboardComponent implements OnInit {
     this.projectData = {
       title: '',
       description: '',
-      type: 'truck-fleet'
+      type: 'truck-fleet',
+      presentationUrl: ''
     };
+    // Clear CSV upload state
+    this.clearCsvUpload();
+  }
+
+  // CSV Upload functionality
+  onCsvFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (file) {
+      const validation = this.csvParserService.validateCsvFile(file);
+
+      if (!validation.isValid) {
+        alert('File validation failed:\n' + validation.errors.join('\n'));
+        input.value = ''; // Clear the input
+        return;
+      }
+
+      this.selectedCsvFile = file;
+      this.processCsvFile();
+    }
+  }
+
+  processCsvFile(): void {
+    if (!this.selectedCsvFile) return;
+
+    this.isProcessingCsv = true;
+    this.csvParseResult = null;
+
+    this.csvParserService.readFileAsText(this.selectedCsvFile).subscribe({
+      next: (content) => {
+        this.csvParserService.parseCsvToTrucks(content).subscribe({
+          next: (result) => {
+            this.csvParseResult = result;
+            this.showCsvResults = true;
+            this.isProcessingCsv = false;
+
+            if (result.success) {
+              console.log(`Successfully parsed ${result.validRows} trucks from CSV`);
+            } else {
+              console.warn(`CSV parsing completed with ${result.errors.length} errors`);
+            }
+          },
+          error: (error) => {
+            alert('Error processing CSV: ' + error.message);
+            this.isProcessingCsv = false;
+          }
+        });
+      },
+      error: (error) => {
+        alert('Error reading file: ' + error.message);
+        this.isProcessingCsv = false;
+      }
+    });
+  }
+
+  clearCsvUpload(): void {
+    this.selectedCsvFile = null;
+    this.csvParseResult = null;
+    this.showCsvResults = false;
+    this.isProcessingCsv = false;
+
+    // Clear file input
+    const fileInput = document.getElementById('csvFileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  }
+
+  removeCsvFile(): void {
+    this.clearCsvUpload();
   }
 
   getTotalIssues(project: Project): number {
@@ -248,4 +366,19 @@ export class ProjectDashboardComponent implements OnInit {
       );
     }
   }
+
+  // CSV Template functionality
+  downloadCsvTemplate(): void {
+    const filename = `truck_fleet_template_${Date.now()}.csv`;
+    this.csvTemplateService.downloadFleetTemplate(filename);
+  }
+
+  getCsvTemplateInstructions(): string[] {
+    return this.csvTemplateService.getTemplateInstructions();
+  }
+
+  getCsvFieldDescriptions(): { [key: string]: string } {
+    return this.csvTemplateService.getFieldDescriptions();
+  }
+
 }

@@ -1,0 +1,73 @@
+<div class="presentation-viewer" *ngIf="project">
+  <!-- Header -->
+  <div class="viewer-header">
+    <div class="header-left">
+      <button mat-icon-button (click)="goBack()" class="back-btn">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="project-info">
+        <h1>{{ project.title }}</h1>
+        <span class="project-type">Presentation Viewer</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button mat-icon-button (click)="reloadPresentation()" class="action-btn" title="Reload Presentation">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-icon-button (click)="openInNewTab()" class="action-btn" title="Open in New Tab">
+        <mat-icon>open_in_new</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="viewer-content">
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading">
+      <mat-icon class="spinning">refresh</mat-icon>
+      <p>Loading presentation...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-state" *ngIf="hasError">
+      <mat-icon>error_outline</mat-icon>
+      <h3>Error Loading Presentation</h3>
+      <p>{{ errorMessage }}</p>
+      <div class="error-actions">
+        <button mat-raised-button color="primary" (click)="reloadPresentation()">
+          <mat-icon>refresh</mat-icon>
+          Try Again
+        </button>
+        <button mat-raised-button (click)="openInNewTab()" *ngIf="project.presentationUrl">
+          <mat-icon>open_in_new</mat-icon>
+          Open in New Tab
+        </button>
+      </div>
+    </div>
+
+    <!-- Presentation Frame -->
+    <div class="presentation-frame" *ngIf="!isLoading && !hasError && safeUrl">
+      <iframe
+        [src]="safeUrl"
+        frameborder="0"
+        allowfullscreen
+        class="presentation-iframe">
+      </iframe>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Error State for Missing Project -->
+<div class="error-state" *ngIf="!project && !isLoading">
+  <mat-icon>folder_open</mat-icon>
+  <h3>Presentation Not Found</h3>
+  <p>The requested presentation could not be found.</p>
+  <button mat-raised-button color="primary" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+    Back to Dashboard
+  </button>
+</div>
