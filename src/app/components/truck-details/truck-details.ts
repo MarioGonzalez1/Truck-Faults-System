@@ -50,6 +50,9 @@ export class TruckDetailsComponent implements OnInit {
   ngOnInit() {
     // Listen to route parameter changes to handle navigation between different trucks
     this.route.paramMap.subscribe(params => {
+      // Close any open video player when navigating to a different truck
+      this.closeVideoPlayer();
+
       const projectId = params.get('id');
       const vin = params.get('vin');
 
@@ -187,6 +190,14 @@ export class TruckDetailsComponent implements OnInit {
   }
 
   closeVideoPlayer() {
+    if (this.showVideoPlayer) {
+      // Stop video playback if it's currently playing
+      const videoElement = document.querySelector('.video-player-content video') as HTMLVideoElement;
+      if (videoElement) {
+        videoElement.pause();
+        videoElement.currentTime = 0;
+      }
+    }
     this.showVideoPlayer = false;
     this.currentVideo = null;
   }

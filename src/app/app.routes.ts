@@ -3,6 +3,7 @@ import { TruckDetailsComponent } from './components/truck-details/truck-details'
 import { HomeComponent } from './components/home/home';
 import { ProjectDashboardComponent } from './components/project-dashboard/project-dashboard';
 import { GeneralProblemViewComponent } from './components/general-problem-view/general-problem-view';
+import { PresentationViewerComponent } from './components/presentation-viewer/presentation-viewer';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,10 @@ export const routes: Routes = [
   {
     path: 'general-problem/:id',
     component: GeneralProblemViewComponent
+  },
+  {
+    path: 'presentation/:id',
+    component: PresentationViewerComponent
   },
   {
     path: '**',
