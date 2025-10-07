@@ -1364,5 +1364,91 @@
         "severity": "critical",
         "status": "open",
         "tags": []
+    },
+    {
+        "id": "1759855730859",
+        "title": "Eaton Transmission Problem",
+        "description": "Eaton Transmission",
+        "type": "general-problem",
+        "createdAt": "2025-10-07T16:48:50.859Z",
+        "trucks": [],
+        "problemDescription": "Eaton Transmission Problem",
+        "mediaContent": [
+            {
+                "id": "1759860889112yrcbhl0gj",
+                "type": "video",
+                "filename": "EatonTransmission7AirPressure.mp4",
+                "url": "/assets/EatonTransmission7AirPressure.mp4",
+                "description": "",
+                "uploadDate": "2025-10-07T18:14:49.112Z",
+                "fileSize": 795584543
+            },
+            {
+                "id": "1759860889113cv9jc0k8m",
+                "type": "video",
+                "filename": "EatonTransmission6.mp4",
+                "url": "/assets/EatonTransmission6.mp4",
+                "description": "",
+                "uploadDate": "2025-10-07T18:14:49.113Z",
+                "fileSize": 2518751
+            },
+            {
+                "id": "1759860889113agd1iprna",
+                "type": "video",
+                "filename": "EatonTransmission5.mp4",
+                "url": "/assets/EatonTransmission5.mp4",
+                "description": "",
+                "uploadDate": "2025-10-07T18:14:49.113Z",
+                "fileSize": 2272623
+            },
+            {
+                "id": "1759860889113i829aqhx3",
+                "type": "video",
+                "filename": "EatonTransmission4.mp4",
+                "url": "/assets/EatonTransmission4.mp4",
+                "description": "",
+                "uploadDate": "2025-10-07T18:14:49.113Z",
+                "fileSize": 6647519
+            },
+            {
+                "id": "1759860889113kzx6mjkho",
+                "type": "video",
+                "filename": "EatonTransmission3.mp4",
+                "url": "/assets/EatonTransmission3.mp4",
+                "description": "",
+                "uploadDate": "2025-10-07T18:14:49.114Z",
+                "fileSize": 5126461
+            },
+            {
+                "id": "1759860889114l8l6bmwt5",
+                "type": "video",
+                "filename": "EatonTransmission2.mp4",
+                "url": "/assets/EatonTransmission2.mp4",
+                "description": "",
+                "uploadDate": "2025-10-07T18:14:49.114Z",
+                "fileSize": 6891243
+            },
+            {
+                "id": "1759860889114jyefti6eh",
+                "type": "video",
+                "filename": "EatonTransmission1.mp4",
+                "url": "/assets/EatonTransmission1.mp4",
+                "description": "",
+                "uploadDate": "2025-10-07T18:14:49.114Z",
+                "fileSize": 3015672
+            },
+            {
+                "id": "17598608891144g09hozx9",
+                "type": "video",
+                "filename": "EatonTransmissionProblem.mp4",
+                "url": "/assets/EatonTransmissionProblem.mp4",
+                "description": "",
+                "uploadDate": "2025-10-07T18:14:49.114Z",
+                "fileSize": 253262071
+            }
+        ],
+        "severity": "medium",
+        "status": "open",
+        "tags": []
     }
 ]
